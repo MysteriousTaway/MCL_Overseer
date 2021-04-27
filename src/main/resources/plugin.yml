@@ -1,0 +1,6 @@
+name: MCL_Overseer
+version: ${project.version}
+main: me.itsjeras.mcl_overseer.MCL_Overseer
+api-version: 1.16
+authors: [ itsJeras ]
+description: Management and rule tools

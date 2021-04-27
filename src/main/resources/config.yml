@@ -1,0 +1,8 @@
+PvE:
+  # All distances are in blocks. (int)
+  Nether:
+    X: 1000
+    Z: 1000
+  Overworld:
+    X: 8000
+    Z: 8000
