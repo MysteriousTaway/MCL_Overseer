@@ -6,3 +6,4 @@ PvE:
   Overworld:
     X: 8000
     Z: 8000
+Allow-End: false

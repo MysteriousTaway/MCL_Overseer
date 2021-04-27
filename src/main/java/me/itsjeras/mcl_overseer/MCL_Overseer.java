@@ -7,7 +7,7 @@ import java.io.File;
 
 public final class MCL_Overseer extends JavaPlugin {
 
-    private File config = new File(getDataFolder(), "config.yml");
+    public File config = new File(getDataFolder(), "config.yml");
 
     @Override
     public void onEnable() {
@@ -17,9 +17,14 @@ public final class MCL_Overseer extends JavaPlugin {
         PluginManager manager = getServer().getPluginManager();
         // Config stuff:
         if (!config.exists()) {
+            //Make:
+            System.out.println("config.yml not found. Created a default config.");
             saveDefaultConfig();
+            //Load:
+            System.out.println("Loading config values:");
             ConfigManager.ReadFromConfig();
         } else {
+            System.out.println("Loading config values:");
             ConfigManager.ReadFromConfig();
         }
         // Listeners:

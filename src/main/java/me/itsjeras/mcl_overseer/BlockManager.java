@@ -26,11 +26,11 @@ public class BlockManager implements Listener {
                         assert world != null;
                         boolean legalityCheck = false;
                         if (Objects.requireNonNull(location.getWorld()).getName().equals("world")) {
-                            if ((-8000 < location.getBlockX() && location.getBlockX() < 8000) && (-8000 < location.getBlockZ() && location.getBlockZ() < 8000)) {
+                            if ((-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X ) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z)) {
                                 legalityCheck = true;
                             }
                         } else if (location.getWorld().getName().equals("world_nether")) {
-                            if ((-1000 < location.getBlockX() && location.getBlockX() < 1000) && (-1000 < location.getBlockZ() && location.getBlockZ() < 1000)) {
+                            if ((-ConfigManager.NetherPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.NetherPVE_X) && (-ConfigManager.NetherPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.NetherPVE_Z)) {
                                 legalityCheck = true;
                             }
                         }

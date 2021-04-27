@@ -12,14 +12,14 @@ public class HonorManager {
 
     public static void AddHonor(Player player, int amount) {
         if(!honorFile.exists()){
-            plugin.saveResource("overseer/PlayerData/reputation.yml",false);
+            plugin.saveResource("MCL_Overseer/PlayerData/" + player.getUniqueId() + ".yml",false);
         }
 
     }
 
     public static void SubtractHonor(Player player, int amount) {
         if(!honorFile.exists()){
-            plugin.saveResource("overseer/PlayerData/reputation.yml",false);
+            plugin.saveResource("MCL_Overseer/PlayerData/" + player.getUniqueId() + ".yml",false);
         }
 
     }

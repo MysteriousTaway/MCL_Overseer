@@ -26,7 +26,7 @@ public class PlayerManager implements Listener {
                 assert player != null;
                 Location location = player.getLocation();
                 // Location of attacked player has to be more than 8000 on x or z axis to be considered valid.
-                if (location.getBlockX() > 8000 || location.getBlockX() < -8000 || location.getBlockZ() > 8000 || location.getBlockZ() < -8000) {
+                if (location.getBlockX() > ConfigManager.OverworldPVE_X || location.getBlockX() < -ConfigManager.OverworldPVE_X || location.getBlockZ() > ConfigManager.OverworldPVE_Z || location.getBlockZ() < -ConfigManager.OverworldPVE_Z) {
                     attacker.sendMessage(ChatColor.GOLD + "<[INFO]> " + ChatColor.WHITE + "You dealt " + ChatColor.RED + event.getDamage() + " damage" + ChatColor.WHITE + " to " + player.getDisplayName());
                     String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: " + event.getDamage() + " ATT_HEALTH: " + attacker.getHealth() + " VIC_HEALTH " + player.getHealth();
                     String fileName = Get.CurrentDate().replace("/", "_");
@@ -70,28 +70,34 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void endPortalListener(PlayerTeleportEvent event) {
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
-            // Get data:
-            Player player = event.getPlayer();
-            Location bedLocation = player.getBedSpawnLocation();
-            assert bedLocation != null;
-            // Punishment
-            getServer().broadcastMessage(ChatColor.RED + "<[OVERSEER]> Player: " + player.getDisplayName() + " broke server rules by using end portal and was penalised.");
-            player.getInventory().clear();
-            player.setExp(0);
-            if(player.getBedSpawnLocation() != null) {
-                player.teleport(bedLocation);
-            } else {
-                player.setHealth(0);
+        if(!ConfigManager.Allow_End) {
+            if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
+                // Get data:
+                Player player = event.getPlayer();
+                Location bedLocation = player.getBedSpawnLocation();
+                assert bedLocation != null;
+                // Punishment
+                getServer().broadcastMessage(ChatColor.RED + "<[OVERSEER]> Player: " + player.getDisplayName() + " broke server rules by using end portal and was penalised.");
+                player.getInventory().clear();
+                player.setExp(0);
+                if (player.getBedSpawnLocation() != null) {
+                    player.teleport(bedLocation);
+                } else {
+                    player.setHealth(0);
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Location location = event.getPlayer().getLocation();
+                World world = location.getWorld();
+                assert world != null;
+                String message = "[END PORTAL] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
+                String fileName = Get.CurrentDate().replace("/", "_");
+                FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
             }
-            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-            Location location = event.getPlayer().getLocation();
-            World world = location.getWorld();
-            assert world != null;
-            String message = "[END PORTAL] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
-            player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
         }
     }
 
