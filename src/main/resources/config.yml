@@ -1,9 +1,26 @@
 PvE:
-  # All distances are in blocks. (int)
+# All distances are in blocks. (int)
   Nether:
     X: 1000
     Z: 1000
   Overworld:
     X: 8000
     Z: 8000
+#If false then everybody who enters the end portal will:
+# - be kicked
+# - teleported to their bed
+# - reset inventory and experience
 Allow-End: false
+#Enable honor score:
+Honor-score:
+  Enable: true
+  #Maximal amount of points:
+  Max-Amount: 100
+  #honor for hour of playing
+  Reward-For-Playing: 10
+  #AFK check
+  Check-For-Afk: true
+  #How many points will be taken from players for breaking the rules:
+  End-Entry-Penalty: 25
+  Entity-Spawn-Penalty: 10
+  Block-Placement-Penalty: 1

@@ -104,6 +104,9 @@ public class PlayerManager implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         if(event != null) {
+            //Create log file:
+            HonorManager.CheckForDataFile(event.getPlayer());
+            //Log login:
             Player player =  event.getPlayer();
             Location location = event.getPlayer().getLocation();
             World world = location.getWorld();
