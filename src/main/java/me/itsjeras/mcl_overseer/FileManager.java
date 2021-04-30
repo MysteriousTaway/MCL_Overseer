@@ -9,7 +9,7 @@ import java.util.Formatter;
 
 public class FileManager {
 
-    static boolean CreateFile = true;
+    private static boolean CreateFile = true;
     public static void writeToFile(String filename, String text) {
         try
         {
