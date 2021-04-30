@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static org.bukkit.Bukkit.getLogger;
-import static org.bukkit.Bukkit.getServer;
 
 public class HonorManager {
 
@@ -76,7 +75,7 @@ public class HonorManager {
         if(!file.exists()) {
             try {
                 file.createNewFile();
-                FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP: " + player.getAddress().getHostName());
+                FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP:\n    - " + player.getAddress().getHostName());
             } catch (IOException exception) {
                 String fileName = Get.CurrentDate().replace("/", "_");
                 String message = "[> CheckForDataFile Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();

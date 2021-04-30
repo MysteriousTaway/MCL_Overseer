@@ -2,6 +2,7 @@ package me.itsjeras.mcl_overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,12 @@ public class EntityManager implements Listener {
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
+        if(event == null) {
+            System.out.println("HOW THE FUCK IS THIS NULL ?!");
+        }
+        /*
+        * OH SHIT OH FUCK HOW DOES THIS NOT WORK OH NO 
+        * */
         try {
             // Find if spawned entity is on banned list:
             for (EntityType entity : Get.getBannedEntityList()) {
@@ -26,51 +34,29 @@ public class EntityManager implements Listener {
                     // Get location and world:
                     Location location = event.getLocation();
                     World world = event.getLocation().getWorld();
-                    // Get if Spawned entity is in 8kx8k spawn area in overworld or 1kx1k are in the nether
-                    assert world != null;
-                    boolean legalityCheck = false;
-                    if (Objects.requireNonNull(location.getWorld()).getName().equals("world")) {
-                        if ((-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z)) {
-                            legalityCheck = true;
-                        }
-                    } else if (location.getWorld().getName().equals("world_nether")) {
-                        if ((-ConfigManager.NetherPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.NetherPVE_X) && (-ConfigManager.NetherPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.NetherPVE_Z)) {
-                            legalityCheck = true;
-                        }
-                    }
                     // Location is in PvE area:
-                    if (legalityCheck) {
-                        // Get closest player:
-                        boolean found = false;
-                        for (int i = 0; i < 200; i++) {
-                            List<Entity> entities = event.getEntity().getNearbyEntities(i, 16, i);
-                            for (Entity e : entities) {
-                                if (e.getType().equals(EntityType.PLAYER)) {
-                                    player = (Player) e;
-                                    found = true;
-                                    break;
+                    if (Get.isInPvE(location)) {
+                        // Get closest players:
+                        List<Player> players = Get.getNearbyPlayerList(event.getEntity());
+                        for (Player pl : players) {
+                            if (!pl.isOp()) {
+                                Material MainHandItem = player.getInventory().getItemInMainHand().getType();
+                                Material OffHandItem = player.getInventory().getItemInOffHand().getType();
+                                for (Material item : Get.getBannedEntitySpawnItem()) {
+                                    if (MainHandItem == item || OffHandItem == item) {
+                                        event.setCancelled(true);
+                                        player.sendMessage(ChatColor.RED + "<[!!!]> You can't do this in a PvE zone!");
+                                        String message = "[ENTITY] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + entity + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
+                                        String fileName = Get.CurrentDate().replace("/", "_");
+                                        FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                                        // Punish:
+                                        HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EntitySpawnPenalty);
+                                        break;
+                                    }
                                 }
                             }
-                            if (found) break;
                         }
-
-                        // If player is found:
-                        if (found) {
-                            // Event logic:
-                            if (!player.isOp()) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "<[!!!]> You can't do this in a PvE zone!");
-                                String message = "[ENTITY] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + entity + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
-                                String fileName = Get.CurrentDate().replace("/", "_");
-                                FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
-                                // Punish:
-                                HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EntitySpawnPenalty);
-                            }
-                        }
-
-                        // if entity is in PvE in "world"
                     }
-                    // if entity is banned
                 }
                 // for loop
             }
@@ -89,5 +75,19 @@ public class EntityManager implements Listener {
             }
         }
         // void
+    }
+
+    @EventHandler
+    public void MinecartSpawnEvent(VehicleCreateEvent event) {
+        try {
+            if (event != null) {
+
+            }
+        } catch(Exception exception) {
+            String fileName = Get.CurrentDate().replace("/", "_");
+            String message = "[> MinecartSpawnEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + event.getVehicle().getLocation().getWorld().toString();
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+        }
     }
 }
