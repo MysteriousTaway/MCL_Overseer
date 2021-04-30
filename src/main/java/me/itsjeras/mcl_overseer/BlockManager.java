@@ -43,6 +43,8 @@ public class BlockManager implements Listener {
                             String message = "[BLOCK] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + block.getType() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
                             String fileName = Get.CurrentDate().replace("/", "_");
                             FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                            // Punish player:
+                            HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.BlockPlacementPenalty);
                         }
                         // is op
                     }

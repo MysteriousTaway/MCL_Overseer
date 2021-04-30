@@ -21,6 +21,6 @@ Honor-score:
   #AFK check
   Check-For-Afk: true
   #How many points will be taken from players for breaking the rules:
-  End-Entry-Penalty: 25
-  Entity-Spawn-Penalty: 10
-  Block-Placement-Penalty: 1
+  End-Entry-Penalty: -25
+  Entity-Spawn-Penalty: -10
+  Block-Placement-Penalty: -1

@@ -85,17 +85,21 @@ public class PlayerManager implements Listener {
                 } else {
                     player.setHealth(0);
                 }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
                 Location location = event.getPlayer().getLocation();
                 World world = location.getWorld();
                 assert world != null;
                 String message = "[END PORTAL] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
                 String fileName = Get.CurrentDate().replace("/", "_");
                 FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                // Punish:
+                // Part 1:
+                HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EndEntryPenalty);
+                // Part 2:
                 player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
             }
         }
@@ -118,6 +122,7 @@ public class PlayerManager implements Listener {
             FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
         }
     }
+
     @EventHandler
     public void onPlayerDisconnectEvent(PlayerQuitEvent event) {
         if(event != null) {

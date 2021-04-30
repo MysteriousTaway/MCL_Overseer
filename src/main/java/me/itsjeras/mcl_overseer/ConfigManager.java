@@ -38,7 +38,7 @@ public class ConfigManager {
             Allow_End = config.getBoolean("Allow-End");
             //Honor score config stuff:
             AllowHonor = config.getBoolean("Honor-Score.Enable");
-            CheckForAfk = config.getBoolean("Honor-Score.");
+            CheckForAfk = config.getBoolean("Honor-Score.Check-For-Afk");
             MaxHonor = config.getInt("Honor-Score.Max-Amount");
             //Rewards:
             HonorForPlaying = config.getInt("Honor-Score.Reward-For-Playing");
@@ -49,13 +49,18 @@ public class ConfigManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void WriteToConfig() {
-
-    }
-
-    public static void reloadValues(){
-
+        System.out.println("<[CONFIG]>");
+        System.out.println("(int)     NetherPVE_X = " + NetherPVE_X);
+        System.out.println("(int)     NetherPVE_Z = " + NetherPVE_Z);
+        System.out.println("(int)     OverworldPVE_X = " + OverworldPVE_X);
+        System.out.println("(int)     OverworldPVE_Z = " + OverworldPVE_Z);
+        System.out.println("(boolean) Allow_End = " + Allow_End);
+        System.out.println("(boolean) AllowHonor = " + AllowHonor);
+        System.out.println("(int)     MaxHonor = " + MaxHonor);
+        System.out.println("(int)     HonorForPlaying = " + HonorForPlaying);
+        System.out.println("(boolean) CheckForAfk = " + CheckForAfk);
+        System.out.println("(int)     EndEntryPenalty = " + EndEntryPenalty);
+        System.out.println("(int)     EntitySpawnPenalty = " + EntitySpawnPenalty);
+        System.out.println("(int)     BlockPlacementPenalty = " + BlockPlacementPenalty);
     }
 }
