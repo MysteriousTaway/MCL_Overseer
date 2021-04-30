@@ -1,17 +1,13 @@
 package me.itsjeras.mcl_overseer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Get {
@@ -76,7 +72,7 @@ public class Get {
 
     public static List<Entity> getNearbyEntityList(Entity entity) {
         List<Entity> entities = null;
-        for (int i = 0; i < 32; i++) {
+        for (int i = 0; i < 256; i++) {
             entities = entity.getNearbyEntities(i, 16, i);
         }
         System.out.println(entities);
@@ -84,12 +80,23 @@ public class Get {
     }
 
     public static List<Player> getNearbyPlayerList(Entity entity) {
-        List<Entity> entities = getNearbyEntityList(entity);
-        List<Player> players = null;
-        // get players from entities:
-        for (Entity pl : entities) {
-            if (pl instanceof Player) {
-                players.add((Player) pl);
+        //Original code
+
+//        List<Entity> entities = getNearbyEntityList(entity);
+//        List<Player> players = null;
+//        // get players from entities:
+//        for (Entity pl : entities) {
+//            if (pl instanceof HumanEntity) {
+//                players.add((Player) pl);
+//            }
+//        }
+        List<Player> players = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            Location playerLoc = p.getLocation();
+            Location entityLoc = entity.getLocation();
+            // BRAINFUCK INCOMING
+            if (Math.sqrt(Math.pow(Math.sqrt(Math.pow(playerLoc.getBlockX() - entityLoc.getBlockX(), 2) + Math.pow(playerLoc.getBlockY() - entityLoc.getBlockY(), 2)), 2) + Math.pow(playerLoc.getBlockZ() - entityLoc.getBlockZ(), 2)) < 16) {
+                players.add(p);
             }
         }
         return players;
