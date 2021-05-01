@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,32 +19,24 @@ public class EntityManager implements Listener {
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if(event == null) {
-            System.out.println("HOW THE FUCK IS THIS NULL ?!");
-        }
-        /*
-        * OH SHIT OH FUCK HOW DOES THIS NOT WORK OH NO 
-        * */
         try {
             // Find if spawned entity is on banned list:
             for (EntityType entity : Get.getBannedEntityList()) {
                 if (entity == event.getEntityType()) {
-                    // Create player:
-                    Player player = null;
+                    boolean HoldsSpawnItem = false;
                     // Get location and world:
                     Location location = event.getLocation();
                     World world = event.getLocation().getWorld();
                     // Location is in PvE area:
                     if (Get.isInPvE(location)) {
-                        // Get closest players:
-                        List<Player> players = Get.getNearbyPlayerList(event.getEntity());
-                        for (Player pl : players) {
-                            if (!pl.isOp()) {
-                                Material MainHandItem = player.getInventory().getItemInMainHand().getType();
-                                Material OffHandItem = player.getInventory().getItemInOffHand().getType();
-                                for (Material item : Get.getBannedEntitySpawnItem()) {
-                                    if (MainHandItem == item || OffHandItem == item) {
-                                        event.setCancelled(true);
+                        for(Player player : Get.getNearbyPlayerList(event.getEntity())) {
+                            if (!player.isOp()) {
+                                event.setCancelled(true);
+                                for(Material item : Get.getBannedEntitySpawnItem()) {
+                                    if (player.getInventory().contains(item)) {
+                                        HoldsSpawnItem = true;
+                                    }
+                                    if(HoldsSpawnItem) {
                                         player.sendMessage(ChatColor.RED + "<[!!!]> You can't do this in a PvE zone!");
                                         String message = "[ENTITY] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + entity + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
                                         String fileName = Get.CurrentDate().replace("/", "_");
@@ -56,7 +48,9 @@ public class EntityManager implements Listener {
                                 }
                             }
                         }
+                        // if entity is in PvE in "world"
                     }
+                    // if entity is banned
                 }
                 // for loop
             }
@@ -76,18 +70,17 @@ public class EntityManager implements Listener {
         }
         // void
     }
-
-    @EventHandler
-    public void MinecartSpawnEvent(VehicleCreateEvent event) {
-        try {
-            if (event != null) {
-
-            }
-        } catch(Exception exception) {
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> MinecartSpawnEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + event.getVehicle().getLocation().getWorld().toString();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
-        }
-    }
 }
+//    @EventHandler
+//    public void MinecartSpawnEvent(VehicleCreateEvent event) {
+//        try {
+//            if (event != null) {
+//
+//            }
+//        } catch(Exception exception) {
+//            String fileName = Get.CurrentDate().replace("/", "_");
+//            String message = "[> MinecartSpawnEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + event.getVehicle().getLocation().getWorld().toString();
+//            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+//            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+//        }
+//    }

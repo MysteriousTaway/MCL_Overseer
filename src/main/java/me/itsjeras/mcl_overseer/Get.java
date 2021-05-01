@@ -67,7 +67,7 @@ public class Get {
                 return true;
             }
         }
-        return (Boolean) null;
+        return false;
     }
 
     public static List<Entity> getNearbyEntityList(Entity entity) {
@@ -80,22 +80,13 @@ public class Get {
     }
 
     public static List<Player> getNearbyPlayerList(Entity entity) {
-        //Original code
-
-//        List<Entity> entities = getNearbyEntityList(entity);
-//        List<Player> players = null;
-//        // get players from entities:
-//        for (Entity pl : entities) {
-//            if (pl instanceof HumanEntity) {
-//                players.add((Player) pl);
-//            }
-//        }
         List<Player> players = new ArrayList<>();
         for (Player p : Bukkit.getOnlinePlayers()) {
+            Double distance;
             Location playerLoc = p.getLocation();
             Location entityLoc = entity.getLocation();
-            // BRAINFUCK INCOMING
-            if (Math.sqrt(Math.pow(Math.sqrt(Math.pow(playerLoc.getBlockX() - entityLoc.getBlockX(), 2) + Math.pow(playerLoc.getBlockY() - entityLoc.getBlockY(), 2)), 2) + Math.pow(playerLoc.getBlockZ() - entityLoc.getBlockZ(), 2)) < 16) {
+            distance = playerLoc.distance(entityLoc);
+            if (distance < 32) {
                 players.add(p);
             }
         }
