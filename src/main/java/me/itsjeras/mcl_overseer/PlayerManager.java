@@ -23,19 +23,22 @@ public class PlayerManager implements Listener {
             if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
                 Player player = ((Player) event).getPlayer();
                 Player attacker = (Player) event.getDamager();
-                assert player != null;
-                Location location = player.getLocation();
-                // Location of attacked player has to be more than 8000 on x or z axis to be considered valid.
-                if (location.getBlockX() > ConfigManager.OverworldPVE_X || location.getBlockX() < -ConfigManager.OverworldPVE_X || location.getBlockZ() > ConfigManager.OverworldPVE_Z || location.getBlockZ() < -ConfigManager.OverworldPVE_Z) {
-                    attacker.sendMessage(ChatColor.GOLD + "<[INFO]> " + ChatColor.WHITE + "You dealt " + ChatColor.RED + event.getDamage() + " damage" + ChatColor.WHITE + " to " + player.getDisplayName());
-                    String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: " + event.getDamage() + " ATT_HEALTH: " + attacker.getHealth() + " VIC_HEALTH " + player.getHealth();
-                    String fileName = Get.CurrentDate().replace("/", "_");
-                    FileManager.writeToFile("CombatLog/" + fileName + ".txt", message);
+                double distance = player.getLocation().distance(attacker.getLocation());
+                if(distance < 3.6) {
+                    assert player != null;
+                    Location location = player.getLocation();
+                    // Location of attacked player has to be more than 8000 on x or z axis to be considered valid.
+                    if(!Get.isInPvE(location)) {
+                        attacker.sendMessage(ChatColor.GOLD + "<[INFO]> " + ChatColor.WHITE + "You dealt " + ChatColor.RED + event.getDamage() + " damage" + ChatColor.WHITE + " to " + player.getDisplayName());
+                        String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: " + event.getDamage() + " ATT_HEALTH: " + attacker.getHealth() + " VIC_HEALTH " + player.getHealth();
+                        String fileName = Get.CurrentDate().replace("/", "_");
+                        FileManager.writeToFile("CombatLog/" + fileName + ".txt", message);
+                    } else {
+                        event.setCancelled(true);
+                    }
                 } else {
-                    attacker.sendMessage(ChatColor.RED + "<[!!!]> This action is not allowed in a PvE zone!");
-                    String message = "[PvE] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: NONE";
-                    String fileName = Get.CurrentDate().replace("/", "_");
-                    FileManager.writeToFile("CombatLog/" + fileName + ".txt", message);
+                    event.setCancelled(true);
+                    attacker.sendMessage(ChatColor.RED +  "<[!!!]> The use of REACH hack is prohibited on this server.");
                 }
             }
         } catch (Exception exception) {
@@ -97,9 +100,9 @@ public class PlayerManager implements Listener {
                 String fileName = Get.CurrentDate().replace("/", "_");
                 FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
                 // Punish:
-                // Part 1:
+                //  Part 1:
                 HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EndEntryPenalty);
-                // Part 2:
+                //  Part 2:
                 player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
             }
         }
