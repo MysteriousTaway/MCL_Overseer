@@ -120,7 +120,7 @@ public class PlayerManager implements Listener {
             int x = location.getBlockX();
             int y = location.getBlockY();
             int z = location.getBlockZ();
-            String message = "[> Join <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z;
+            String message = "[> Join <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
         }
@@ -135,7 +135,7 @@ public class PlayerManager implements Listener {
             int x = location.getBlockX();
             int y = location.getBlockY();
             int z = location.getBlockZ();
-            String message = "[> Quit <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z;
+            String message = "[> Quit <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
         }

@@ -69,18 +69,30 @@ public class HonorManager {
         }
     }
 
+    public static void SetIP(Player player) {
+        SetConfigFile(player.getUniqueId());
+        config.set(player.getUniqueId() + ".IP", player.getAddress().getHostName());
+        try {
+            config.save(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void CheckForDataFile(Player player){
         UUID UUID = player.getUniqueId();
         File file = new File("plugins/MCL_Overseer/PlayerData/", UUID + ".yml");
         if(!file.exists()) {
             try {
                 file.createNewFile();
-                FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP:\n    - " + player.getAddress().getHostName());
+                FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP: " + player.getAddress().getHostName());
             } catch (IOException exception) {
                 String fileName = Get.CurrentDate().replace("/", "_");
                 String message = "[> CheckForDataFile Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
                 FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             }
+        } else {
+            SetIP(player);
         }
     }
 }
