@@ -21,32 +21,17 @@ public class BlockManager implements Listener {
                     Location location = event.getBlock().getLocation();
                     World world = location.getWorld();
                     // Check if player does not have OP:
-                    if (!player.isOp()) {
-                        // World check:
-                        assert world != null;
-                        boolean legalityCheck = false;
-                        if (Objects.requireNonNull(location.getWorld()).getName().equals("world")) {
-                            if ((-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X ) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z)) {
-                                legalityCheck = true;
-                            }
-                        } else if (location.getWorld().getName().equals("world_nether")) {
-                            if ((-ConfigManager.NetherPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.NetherPVE_X) && (-ConfigManager.NetherPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.NetherPVE_Z)) {
-                                legalityCheck = true;
-                            }
-                        }
-
-                        if (legalityCheck) {
-                            // send message:
-                            event.setCancelled(true);
-                            player.sendMessage(ChatColor.RED + "<[!!!]> You can't place this in a PvE zone!");
-                            // Save report:
-                            String message = "[BLOCK] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + block.getType() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
-                            String fileName = Get.CurrentDate().replace("/", "_");
-                            FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
-                            // Punish player:
-                            HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.BlockPlacementPenalty);
-                        }
-                        // is op
+                    if (!player.isOp() && Get.isInPvE(location)) {
+                        // send message:
+                        event.setCancelled(true);
+                        player.sendMessage(ChatColor.RED + "<[!!!]> You can't place this in a PvE zone!");
+                        // Save report:
+                        String message = "[BLOCK] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + block.getType() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
+                        String fileName = Get.CurrentDate().replace("/", "_");
+                        FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                        // Punish player:
+                        HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.BlockPlacementPenalty);
+                        // is not op && is int pve
                     }
                 }
                 // for loop

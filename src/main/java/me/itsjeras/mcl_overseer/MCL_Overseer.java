@@ -20,13 +20,10 @@ public final class MCL_Overseer extends JavaPlugin {
             //Make:
             System.out.println("config.yml not found. Created a default config.");
             saveDefaultConfig();
-            //Load:
-            System.out.println("Loading config values:");
-            ConfigManager.ReadFromConfig();
-        } else {
-            System.out.println("Loading config values:");
-            ConfigManager.ReadFromConfig();
         }
+        // Load config:
+        System.out.println("Loading config values:");
+        ConfigManager.ReadFromConfig();
         // Listeners:
         try {
             manager.registerEvents(new ChatManager(), this);
