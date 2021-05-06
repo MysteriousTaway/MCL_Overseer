@@ -24,6 +24,8 @@ public final class MCL_Overseer extends JavaPlugin {
         // Load config:
         System.out.println("Loading config values:");
         ConfigManager.ReadFromConfig();
+        // Make dirs if not found:
+        FileManager.CheckForFolders();
         // Listeners:
         try {
             manager.registerEvents(new ChatManager(), this);
