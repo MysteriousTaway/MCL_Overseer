@@ -13,6 +13,8 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import java.util.Objects;
 
+import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+
 public class EntityManager implements Listener {
 
     @EventHandler
@@ -50,7 +52,7 @@ public class EntityManager implements Listener {
                 }
             }
         } catch (Exception exception){
-            System.out.println("<[!!!]> Overseer could not log entity spawn event!");
+            LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             if (event == null) {

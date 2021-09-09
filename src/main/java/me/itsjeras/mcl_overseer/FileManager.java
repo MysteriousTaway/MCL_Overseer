@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Formatter;
 
+import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+
 public class FileManager {
 
     private static boolean CreateFile = true;
@@ -21,9 +23,9 @@ public class FileManager {
         }
         catch(Exception ioe)
         {
-            System.err.println(ChatColor.RED + "IOException: " + ioe.getMessage());
+            LoggerInstance.info(ChatColor.RED + "IOException: " + ioe.getMessage());
             if(CreateFile) {
-                System.out.println(ChatColor.YELLOW + "<[!!!]> Creating a new file as an attempt to fix the exception!");
+                LoggerInstance.info(ChatColor.YELLOW + "<[!!!]> Creating a new file as an attempt to fix the exception!");
                 CreateFile = false;
                 try {
                     Formatter formatter = new Formatter("plugins/MCL_Overseer/" + filename);
@@ -32,7 +34,7 @@ public class FileManager {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println(ChatColor.YELLOW + "<[!!!]> Creating a new file did not fix the exception!");
+                LoggerInstance.info(ChatColor.YELLOW + "<[!!!]> Creating a new file did not fix the exception!");
                 CreateFile = true;
             }
         }
