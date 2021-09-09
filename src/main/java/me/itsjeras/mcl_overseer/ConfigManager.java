@@ -4,6 +4,8 @@ import org.bukkit.plugin.Plugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+
 public class ConfigManager {
 
     private static final Plugin plugin = MCL_Overseer.getPlugin(MCL_Overseer.class);
@@ -49,18 +51,18 @@ public class ConfigManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("<[CONFIG]>");
-        System.out.println("(int)     NetherPVE_X = " + NetherPVE_X);
-        System.out.println("(int)     NetherPVE_Z = " + NetherPVE_Z);
-        System.out.println("(int)     OverworldPVE_X = " + OverworldPVE_X);
-        System.out.println("(int)     OverworldPVE_Z = " + OverworldPVE_Z);
-        System.out.println("(boolean) Allow_End = " + Allow_End);
-        System.out.println("(boolean) AllowHonor = " + AllowHonor);
-        System.out.println("(int)     MaxHonor = " + MaxHonor);
-        System.out.println("(int)     HonorForPlaying = " + HonorForPlaying);
-        System.out.println("(boolean) CheckForAfk = " + CheckForAfk);
-        System.out.println("(int)     EndEntryPenalty = " + EndEntryPenalty);
-        System.out.println("(int)     EntitySpawnPenalty = " + EntitySpawnPenalty);
-        System.out.println("(int)     BlockPlacementPenalty = " + BlockPlacementPenalty);
+        LoggerInstance.info("<[CONFIG]>");
+        LoggerInstance.info("(int)     NetherPVE_X = " + NetherPVE_X);
+        LoggerInstance.info("(int)     NetherPVE_Z = " + NetherPVE_Z);
+        LoggerInstance.info("(int)     OverworldPVE_X = " + OverworldPVE_X);
+        LoggerInstance.info("(int)     OverworldPVE_Z = " + OverworldPVE_Z);
+        LoggerInstance.info("(boolean) Allow_End = " + Allow_End);
+        LoggerInstance.info("(boolean) AllowHonor = " + AllowHonor);
+        LoggerInstance.info("(int)     MaxHonor = " + MaxHonor);
+        LoggerInstance.info("(int)     HonorForPlaying = " + HonorForPlaying);
+        LoggerInstance.info("(boolean) CheckForAfk = " + CheckForAfk);
+        LoggerInstance.info("(int)     EndEntryPenalty = " + EndEntryPenalty);
+        LoggerInstance.info("(int)     EntitySpawnPenalty = " + EntitySpawnPenalty);
+        LoggerInstance.info("(int)     BlockPlacementPenalty = " + BlockPlacementPenalty);
     }
 }

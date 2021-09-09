@@ -13,6 +13,8 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import java.util.Objects;
 
+import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+
 public class EntityManager implements Listener {
 
     @EventHandler
@@ -50,7 +52,7 @@ public class EntityManager implements Listener {
                 }
             }
         } catch (Exception exception){
-            System.out.println("<[!!!]> Overseer could not log entity spawn event!");
+            LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             if (event == null) {
@@ -80,6 +82,7 @@ public class EntityManager implements Listener {
                                     HoldsSpawnItem = true;
                                 }
                                 if (HoldsSpawnItem) {
+                                    event.setCancelled(true);
                                     player.sendMessage(ChatColor.RED + "<[!!!]> You can't do this in a PvE zone!");
                                     String message = "[VEHICLE ENTITY] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + entity + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
                                     String fileName = Get.CurrentDate().replace("/", "_");

@@ -12,7 +12,7 @@ PvE:
 # - reset inventory and experience
 Allow-End: false
 #Enable honor score:
-Honor-score:
+Honor-Score:
   Enable: true
   #Maximal amount of points:
   Max-Amount: 100

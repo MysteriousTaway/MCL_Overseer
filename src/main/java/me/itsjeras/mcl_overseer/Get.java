@@ -9,6 +9,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
+
+import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
 
 public class Get {
     public static int RandomNumInRange (int min, int max) {
@@ -75,7 +78,8 @@ public class Get {
         for (int i = 0; i < 256; i++) {
             entities = entity.getNearbyEntities(i, 16, i);
         }
-        System.out.println(entities);
+//        System.out.println(entities);
+        LoggerInstance.info((Supplier<String>) entities);
         return entities;
     }
 

@@ -1,28 +1,35 @@
 package me.itsjeras.mcl_overseer;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 public final class MCL_Overseer extends JavaPlugin {
 
     public File config = new File(getDataFolder(), "config.yml");
 
+    // Update because PaperMC wants me to do this:
+    // Public instances:
+    public static Server ServerInstance;
+    public static Logger LoggerInstance;
     @Override
     public void onEnable() {
         // Plugin startup logic
         //OVERSEER LOGO:
-        System.out.println("                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
+        LoggerInstance.info("                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
         PluginManager manager = getServer().getPluginManager();
+
         // Config stuff:
         if (!config.exists()) {
             //Make:
-            System.out.println("config.yml not found. Created a default config.");
+            LoggerInstance.info("config.yml not found. Created a default config.");
             saveDefaultConfig();
         }
         // Load config:
-        System.out.println("Loading config values:");
+        LoggerInstance.info("Loading config values:");
         ConfigManager.ReadFromConfig();
         // Make dirs if not found:
         FileManager.CheckForFolders();
