@@ -14,12 +14,12 @@ public final class MCL_Overseer extends JavaPlugin {
     // Update because PaperMC wants me to do this:
     // Public instances:
     public static Server ServerInstance;
-    public static Logger LoggerInstance;
+    public static java.util.logging.Logger LoggerInstance = java.util.logging.Logger.getLogger("<OVERSEER>");
     @Override
     public void onEnable() {
         // Plugin startup logic
         //OVERSEER LOGO:
-        LoggerInstance.info("                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
+        LoggerInstance.info("\n                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
         PluginManager manager = getServer().getPluginManager();
 
         // Config stuff:
@@ -35,10 +35,13 @@ public final class MCL_Overseer extends JavaPlugin {
         FileManager.CheckForFolders();
         // Listeners:
         try {
+            // Version 0.1
             manager.registerEvents(new ChatManager(), this);
             manager.registerEvents(new PlayerManager(), this);
             manager.registerEvents(new BlockManager(), this);
             manager.registerEvents(new EntityManager(), this);
+            // NEW! in version 0.3
+            manager.registerEvents(new Analytics(), this);
         } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
@@ -46,6 +49,10 @@ public final class MCL_Overseer extends JavaPlugin {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
+        // NEW! Update 0.3
+        // Analytics:
+        Analytics.CheckForDataFile();
+        Analytics.SetConfigFile();
         //Commands:
     }
 
