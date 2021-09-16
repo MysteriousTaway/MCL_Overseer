@@ -7,14 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -50,21 +46,31 @@ public class Analytics implements Listener {
             try {
                 file.createNewFile();
                 FileManager.writeToFile("/Analytics/" + Get.CurrentDate().replace("/", "_") + ".yml",
-                        "# Connection:\n"+
-                                "Player-Connects: 0\n"+
-                                "Player-Disconnects: 0\n"+
-                                "# Health:\n"+
-                                "Health-Lost: 0\n"+
-                                "Health-Regenerated: 0\n"+
-                                "# Blocks:\n"+
-                                "Blocks-Broken: 0 \n"+
-                                "Blocks-Built: 0\n"+
-                                "# Chat:\n"+
-                                "Messages-Sent: 0\n"+
-                                "Commands-Executed: 0\n"+
-                                "# Spawn:\n"+
-                                "Player-Deaths: 0\n"+
-                                "Entities-Spawned: 0\n");
+                        "Connection:"+
+                                "\n  Player-Connects: 0"+
+                                "\n  Player-Disconnects: 0"+
+                                "\nHealth:"+
+                                "\n  Health-Lost: 0"+
+                                "\n  Health-Regenerated: 0"+
+                                "\nBlocks:"+
+                                "\n  Blocks-Broken: 0 "+
+                                "\n  Blocks-Built: 0"+
+                                "\nChat:"+
+                                "\n  Messages-Sent: 0"+
+                                "\n  Commands-Executed: 0"+
+                                "\nPlayer:"+
+                                "\n  Player-Deaths: 0"+
+                                "\n  Experience-Received: 0"+
+                                "\n  Advancements-Done: 0"+
+                                "\n  Overworld-Entered-Count: 0"+
+                                "\n  Nether-Entered-Count: 0"+
+                                "\n  End-Entered-Count: 0"+
+                                "\nEntity:"+
+                                "\n  Entities-Spawned: 0"+
+                                "\n  Entity-Died-Amount: 0"+
+                                "\nChunks:"+
+                                "\n  New-Chunks-Loaded: 0"
+                );
             } catch (IOException exception) {
                 String fileName = Get.CurrentDate().replace("/", "_");
                 String message = "[> CheckForDataFile Exception (ANALYTICS)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
@@ -85,74 +91,127 @@ public class Analytics implements Listener {
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent event) throws IOException {
         if(event.getEntity() instanceof Player ) {
-            double value = config.getInt("Health-Lost");
-            config.set("Health-Lost", value + event.getDamage());
+            double value = config.getInt("Health.Health-Lost");
+            config.set("Health.Health-Lost", value + event.getDamage());
             config.save(path);
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) throws IOException {
-        int value = config.getInt("Player-Deaths");
-        config.set("Player-Deaths", value + 1);
+        int value = config.getInt("Player.Player-Deaths");
+        config.set("Player.Player-Deaths", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) throws IOException {
-        int value = config.getInt("Player-Connects");
-        config.set("Player-Connects", value + 1);
+        int value = config.getInt("Connection.Player-Connects");
+        config.set("Connection.Player-Connects", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void onPlayerDisconnectEvent(PlayerQuitEvent event) throws IOException {
-        int value = config.getInt("Player-Disconnects");
-        config.set("Player-Disconnects", value + 1);
+        int value = config.getInt("Connection.Player-Disconnects");
+        config.set("Connection.Player-Disconnects", value + 1);
         config.save(path);
     }
 
     @EventHandler @Deprecated
     public void onPlayerChat(PlayerChatEvent event) throws IOException {
-        int value = config.getInt("Messages-Sent");
-        config.set("Messages-Sent", value + 1);
+        int value = config.getInt("Chat.Messages-Sent");
+        config.set("Chat.Messages-Sent", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void onCommandExecution(PlayerCommandPreprocessEvent event) throws IOException {
-        int value = config.getInt("Commands-Executed");
-        config.set("Commands-Executed", value + 1);
+        int value = config.getInt("Chat.Commands-Executed");
+        config.set("Chat.Commands-Executed", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) throws IOException {
-        int value = config.getInt("Entities-Spawned");
-        config.set("Entities-Spawned", value + 1);
+        int value = config.getInt("Entity.Entities-Spawned");
+        config.set("Entity.Entities-Spawned", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void EntityRegainHealthEvent(EntityRegainHealthEvent event) throws IOException {
         if(event.getEntity() instanceof Player ) {
-            double value = config.getDouble("Health-Regenerated");
-            config.set("Health-Regenerated", value + event.getAmount());
+            double value = config.getDouble("Health.Health-Regenerated");
+            config.set("Health.Health-Regenerated", value + event.getAmount());
             config.save(path);
         }
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) throws IOException {
-        int value = config.getInt("Blocks-Built");
-        config.set("Blocks-Built", value + 1);
+        int value = config.getInt("Blocks.Blocks-Built");
+        config.set("Blocks.Blocks-Built", value + 1);
         config.save(path);
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) throws IOException {
-        int value = config.getInt("Blocks-Broken");
-        config.set("Blocks-Broken", value + 1);
+        int value = config.getInt("Blocks.Blocks-Broken");
+        config.set("Blocks.Blocks-Broken", value + 1);
+        config.save(path);
+    }
+
+    @EventHandler
+    public void PlayerExpChangeEvent(PlayerExpChangeEvent event) throws IOException {
+        int value = config.getInt("Player.Experience-Received");
+        config.set("Player.Experience-Received", value + event.getAmount());
+        config.save(path);
+    }
+
+    @EventHandler
+    public void PlayerTeleportEvent(PlayerTeleportEvent event) throws IOException {
+        switch(event.getTo().getWorld().getName()) {
+            case("world") -> {
+                int value = config.getInt("Player.Overworld-Entered-Count");
+                config.set("Player.Overworld-Entered-Count", value + 1 );
+                config.save(path);
+            }
+            case("world_nether") -> {
+                int value = config.getInt("Player.Nether-Entered-Count");
+                config.set("Player.Nether-Entered-Count", value + 1 );
+                config.save(path);
+            }
+            case("world_the_end") -> {
+                int value = config.getInt("Player.End-Entered-Count");
+                config.set("Player.End-Entered-Count", value + 1 );
+                config.save(path);
+            }
+        }
+    }
+
+    @EventHandler
+    public void EntityDeathEvent(EntityDeathEvent event) throws IOException {
+        if(!(event.getEntity() instanceof Player)){
+            int value = config.getInt("Entity.Entity-Died-Amount");
+            config.set("Entity.Entity-Died-Amount", value + 1 );
+            config.save(path);
+        }
+    }
+
+    @EventHandler
+    public void NewChunkLoadEvent(ChunkLoadEvent event) throws IOException {
+        if(event.isNewChunk()) {
+            int value = config.getInt("Chunks.New-Chunks-Loaded");
+            config.set("Chunks.New-Chunks-Loaded", value + 1);
+            config.save(path);
+        }
+    }
+
+    @EventHandler
+    public void PlayerInteractEvent(PlayerAdvancementDoneEvent event) throws IOException {
+        int value = config.getInt("Player.Advancements-Done");
+        config.set("Player.Advancements-Done", value + 1);
         config.save(path);
     }
 }

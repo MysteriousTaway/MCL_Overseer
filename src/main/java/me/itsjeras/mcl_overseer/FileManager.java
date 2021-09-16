@@ -63,7 +63,7 @@ public class FileManager {
             for (File file : Files) {
                 if (!file.exists()) {
                     file.mkdir();
-                    LoggerInstance.warning("CREATED FILE! " + file.getPath());
+                    LoggerInstance.warning("CREATED FILE! [" + file.getPath() + "]");
                 }
             }
         } catch (Exception exception) {
