@@ -21,11 +21,11 @@ public class FileManager {
             writer.newLine();
             writer.close();
         }
-        catch(Exception ioe)
+        catch(Exception exception)
         {
-            LoggerInstance.info(ChatColor.RED + "IOException: " + ioe.getMessage());
+            LoggerInstance.severe("Exception: " + exception.getMessage());
             if(CreateFile) {
-                LoggerInstance.info(ChatColor.YELLOW + "<[!!!]> Creating a new file as an attempt to fix the exception!");
+                LoggerInstance.severe("<[!!!]> Creating a new file as an attempt to fix the exception!");
                 CreateFile = false;
                 try {
                     Formatter formatter = new Formatter("plugins/MCL_Overseer/" + filename);
@@ -34,7 +34,7 @@ public class FileManager {
                     e.printStackTrace();
                 }
             } else {
-                LoggerInstance.info(ChatColor.YELLOW + "<[!!!]> Creating a new file did not fix the exception!");
+                LoggerInstance.severe("<[!!!]> Creating a new file did not fix the exception!");
                 CreateFile = true;
             }
         }
@@ -51,12 +51,19 @@ public class FileManager {
                 new File("plugins/MCL_Overseer/ExceptionLog/"),
                 new File("plugins/MCL_Overseer/ForbiddenActivityLog/"),
                 new File("plugins/MCL_Overseer/PlayerData/"),
+                new File("plugins/MCL_Overseer/Analytics/"),
 
         };
         try {
-            if(!Files[0].exists()) {
-                for(File file : Files) {
+//            if(!Files[0].exists()) {
+//                for(File file : Files) {
+//                    file.mkdir();
+//                }
+//            }
+            for (File file : Files) {
+                if (!file.exists()) {
                     file.mkdir();
+                    LoggerInstance.warning("CREATED FILE! " + file.getPath());
                 }
             }
         } catch (Exception exception) {
