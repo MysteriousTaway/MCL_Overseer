@@ -169,15 +169,9 @@ public class Statistics extends BukkitRunnable implements Listener {
     @EventHandler
     public void PlayerTeleportEvent(PlayerTeleportEvent event) {
         switch (event.getTo().getWorld().getName()) {
-            case ("world") -> {
-                Overworld_Entered_Count++;
-            }
-            case ("world_nether") -> {
-                Nether_Entered_Count++;
-            }
-            case ("world_the_end") -> {
-                End_Entered_Count++;
-            }
+            case ("world") -> Overworld_Entered_Count++;
+            case ("world_nether") -> Nether_Entered_Count++;
+            case ("world_the_end") -> End_Entered_Count++;
         }
     }
 
@@ -297,30 +291,7 @@ public class Statistics extends BukkitRunnable implements Listener {
             New_Chunks_Loaded = config.getInt("Chunks.New-Chunks-Loaded");
 
             // Print to console:
-            LoggerInstance.warning("\n         <[LOADED STATS]>");
-            LoggerInstance.info("(int)     Player_Connects         = " + Player_Connects);
-            LoggerInstance.info("(int)     Player_Disconnects      = " + Player_Disconnects);
-
-            LoggerInstance.info("(double)  Health_Lost             = " + Health_Lost);
-            LoggerInstance.info("(double)  Health_Regenerated      = " + Health_Regenerated);
-
-            LoggerInstance.info("(int)     Blocks_Broken           = " + Blocks_Broken);
-            LoggerInstance.info("(int)     Blocks_Built            = " + Blocks_Built);
-
-            LoggerInstance.info("(int)     Messages_Sent           = " + Messages_Sent);
-            LoggerInstance.info("(int)     Commands_Executed       = " + Commands_Executed);
-
-            LoggerInstance.info("(int)     Player_Deaths           = " + Player_Deaths);
-            LoggerInstance.info("(int)     Experience_Received     = " + Experience_Received);
-            LoggerInstance.info("(int)     Advancements_Done       = " + Advancements_Done);
-            LoggerInstance.info("(int)     Overworld_Entered_Count = " + Overworld_Entered_Count);
-            LoggerInstance.info("(int)     Nether_Entered_Count    = " + Nether_Entered_Count);
-            LoggerInstance.info("(int)     End_Entered_Count       = " + End_Entered_Count);
-
-            LoggerInstance.info("(int)     Entities_Spawned        = " + Entities_Spawned);
-            LoggerInstance.info("(int)     Entity_Died_Amount      = " + Entity_Died_Amount);
-
-            LoggerInstance.info("(int)     New_Chunks_Loaded       = " + New_Chunks_Loaded);
+            PrintStatistics();
         } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
@@ -328,5 +299,32 @@ public class Statistics extends BukkitRunnable implements Listener {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
+    }
+
+    public static void PrintStatistics() {
+        LoggerInstance.warning("\n         <[STATS]>");
+        LoggerInstance.info("(int)     Player_Connects         = " + Player_Connects);
+        LoggerInstance.info("(int)     Player_Disconnects      = " + Player_Disconnects);
+
+        LoggerInstance.info("(double)  Health_Lost             = " + Health_Lost);
+        LoggerInstance.info("(double)  Health_Regenerated      = " + Health_Regenerated);
+
+        LoggerInstance.info("(int)     Blocks_Broken           = " + Blocks_Broken);
+        LoggerInstance.info("(int)     Blocks_Built            = " + Blocks_Built);
+
+        LoggerInstance.info("(int)     Messages_Sent           = " + Messages_Sent);
+        LoggerInstance.info("(int)     Commands_Executed       = " + Commands_Executed);
+
+        LoggerInstance.info("(int)     Player_Deaths           = " + Player_Deaths);
+        LoggerInstance.info("(int)     Experience_Received     = " + Experience_Received);
+        LoggerInstance.info("(int)     Advancements_Done       = " + Advancements_Done);
+        LoggerInstance.info("(int)     Overworld_Entered_Count = " + Overworld_Entered_Count);
+        LoggerInstance.info("(int)     Nether_Entered_Count    = " + Nether_Entered_Count);
+        LoggerInstance.info("(int)     End_Entered_Count       = " + End_Entered_Count);
+
+        LoggerInstance.info("(int)     Entities_Spawned        = " + Entities_Spawned);
+        LoggerInstance.info("(int)     Entity_Died_Amount      = " + Entity_Died_Amount);
+
+        LoggerInstance.info("(int)     New_Chunks_Loaded       = " + New_Chunks_Loaded);
     }
 }

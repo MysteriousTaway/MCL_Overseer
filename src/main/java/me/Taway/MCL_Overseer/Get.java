@@ -68,13 +68,9 @@ public class Get {
 
     public static boolean isInPvE(Location location) {
         if (Objects.requireNonNull(location.getWorld()).getName().equals("world")) {
-            if ((-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z)) {
-                return true;
-            }
+            return (-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z);
         } else if (location.getWorld().getName().equals("world_nether")) {
-            if ((-ConfigManager.NetherPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.NetherPVE_X) && (-ConfigManager.NetherPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.NetherPVE_Z)) {
-                return true;
-            }
+            return (-ConfigManager.NetherPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.NetherPVE_X) && (-ConfigManager.NetherPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.NetherPVE_Z);
         }
         return false;
     }
@@ -92,7 +88,7 @@ public class Get {
     public static List<Player> getNearbyPlayerList(Entity entity) {
         List<Player> players = new ArrayList<>();
         for (Player p : Bukkit.getOnlinePlayers()) {
-            Double distance;
+            double distance;
             Location playerLoc = p.getLocation();
             Location entityLoc = entity.getLocation();
             distance = playerLoc.distance(entityLoc);
