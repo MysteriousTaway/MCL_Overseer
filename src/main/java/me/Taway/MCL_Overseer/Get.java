@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class Get {
     public static int RandomNumInRange (int min, int max) {

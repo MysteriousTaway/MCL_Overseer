@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

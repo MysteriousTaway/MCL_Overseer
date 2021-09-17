@@ -1,14 +1,12 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 public final class MCL_Overseer extends JavaPlugin {
 
@@ -50,7 +48,7 @@ public final class MCL_Overseer extends JavaPlugin {
             manager.registerEvents(new BlockManager(), this);
             manager.registerEvents(new EntityManager(), this);
             // NEW! in version 0.3
-            manager.registerEvents(new Analytics(), this);
+            manager.registerEvents(new Statistics(), this);
         } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
@@ -59,18 +57,37 @@ public final class MCL_Overseer extends JavaPlugin {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
 
-        // Analytics:
-        Analytics.CheckForDataFile();
-        Analytics.SetConfigFile();
+        // Statistics:
+        Statistics.CheckForDataFile();
+        Statistics.SetConfigFile();
 
         // NEW! Update 0.3.5
+        // Set data for statistics:
+        Statistics.Player_Connects = 0;
+        Statistics.Player_Disconnects = 0;
+        Statistics.Health_Lost = 0;
+        Statistics.Health_Regenerated = 0;
+        Statistics.Blocks_Broken = 0;
+        Statistics.Blocks_Built = 0;
+        Statistics.Messages_Sent = 0;
+        Statistics.Commands_Executed = 0;
+        Statistics.Player_Deaths = 0;
+        Statistics.Experience_Received = 0;
+        Statistics.Advancements_Done = 0;
+        Statistics.Overworld_Entered_Count = 0;
+        Statistics.Nether_Entered_Count = 0;
+        Statistics.End_Entered_Count = 0;
+        Statistics.Entities_Spawned = 0;
+        Statistics.Entity_Died_Amount = 0;
+        Statistics.New_Chunks_Loaded = 0;
+        // Make scheduler:
         try {
-            BukkitTask SaveAnalytics = new Analytics().runTask(PluginInstance);
+            BukkitTask SaveAnalytics = new Statistics().runTask(PluginInstance);
             SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
         } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> onEnable Exception (Analytics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            message = "[> onEnable Exception (Statistics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
@@ -80,6 +97,7 @@ public final class MCL_Overseer extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        Statistics.SaveStatistics();
         getServer().broadcastMessage(ChatColor.RED + "<[!!!]> "+ ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
     }
 }

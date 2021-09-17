@@ -1,10 +1,10 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.plugin.Plugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class ConfigManager {
 
@@ -27,7 +27,7 @@ public class ConfigManager {
     public static int EndEntryPenalty;
     public static int EntitySpawnPenalty;
     public static int BlockPlacementPenalty;
-    //Analytics:
+    //Statistics:
     public static int SaveFileIntervalTicks;
 
     public static void ReadFromConfig(){
@@ -49,8 +49,8 @@ public class ConfigManager {
             EndEntryPenalty = config.getInt("Honor-Score.End-Entry-Penalty");
             EntitySpawnPenalty = config.getInt("Honor-Score.Entity-Spawn-Penalty");
             BlockPlacementPenalty = config.getInt("Honor-Score.Block-Placement-Penalty");
-            //Analytics:
-            SaveFileIntervalTicks = config.getInt("Analytics.Save-File-Interval-Ticks");
+            //Statistics:
+            SaveFileIntervalTicks = config.getInt("Statistics.Save-File-Interval-Ticks");
         } catch (Exception e) {
             e.printStackTrace();
         }

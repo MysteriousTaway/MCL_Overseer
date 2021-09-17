@@ -24,7 +24,7 @@ Honor-Score:
   End-Entry-Penalty: -25
   Entity-Spawn-Penalty: -10
   Block-Placement-Penalty: -1
-# Analytics:
-Analytics:
+# Statistics:
+Statistics:
   # Every 6000 ticks which is 5 minutes
   Save-File-Interval-Ticks: 6000

@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Objects;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
 import static org.bukkit.Bukkit.getServer;
 
 public class PlayerManager implements Listener {
@@ -43,7 +42,7 @@ public class PlayerManager implements Listener {
                 }
             }
         } catch (Exception exception) {
-            LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player damage!");
+            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player damage!");
             String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
@@ -63,7 +62,7 @@ public class PlayerManager implements Listener {
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("DeathLog/" + fileName + ".txt", message);
         } catch (Exception exception) {
-            LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player death!");
+            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player death!");
             String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);

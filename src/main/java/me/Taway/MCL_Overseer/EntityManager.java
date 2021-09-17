@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import java.util.Objects;
-
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
 
 public class EntityManager implements Listener {
 
@@ -52,7 +50,7 @@ public class EntityManager implements Listener {
                 }
             }
         } catch (Exception exception){
-            LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
+            MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             if (event == null) {
