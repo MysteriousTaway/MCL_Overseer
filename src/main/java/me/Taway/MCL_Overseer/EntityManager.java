@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import java.util.Objects;
-
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
 
 public class EntityManager implements Listener {
 
@@ -29,14 +27,14 @@ public class EntityManager implements Listener {
                     World world = event.getLocation().getWorld();
                     // Location is in PvE area:
                     if (Get.isInPvE(location)) {
-                        for(Player player : Get.getNearbyPlayerList(event.getEntity())) {
+                        for (Player player : Get.getNearbyPlayerList(event.getEntity())) {
                             if (!player.isOp()) {
                                 event.setCancelled(true);
-                                for(Material item : Get.getBannedEntitySpawnItem()) {
+                                for (Material item : Get.getBannedEntitySpawnItem()) {
                                     if (player.getInventory().contains(item)) {
                                         HoldsSpawnItem = true;
                                     }
-                                    if(HoldsSpawnItem) {
+                                    if (HoldsSpawnItem) {
                                         player.sendMessage(ChatColor.RED + "<[!!!]> You can't do this in a PvE zone!");
                                         String message = "[ENTITY] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " BLOCK TYPE: " + entity + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
                                         String fileName = Get.CurrentDate().replace("/", "_");
@@ -51,13 +49,13 @@ public class EntityManager implements Listener {
                     }
                 }
             }
-        } catch (Exception exception){
-            LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
+        } catch (Exception exception) {
+            MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             if (event == null) {
                 message = "(null) [> onEntitySpawn Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n" + message);
+                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n" + message);
             } else {
                 message = "[> onEntitySpawn Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + Objects.requireNonNull(event.getLocation().getWorld()).getName();
                 FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
@@ -71,13 +69,13 @@ public class EntityManager implements Listener {
     public void MinecartSpawnEvent(VehicleCreateEvent event) {
         try {
             if (event != null) {
-                for(EntityType entity : Get.getBannedMinecartList()) {
+                for (EntityType entity : Get.getBannedMinecartList()) {
                     if (event.getVehicle().getType() == entity) {
                         boolean HoldsSpawnItem = false;
                         World world = event.getVehicle().getWorld();
                         Location location = event.getVehicle().getLocation();
                         for (Player player : Get.getNearbyPlayerList(event.getVehicle())) {
-                            for(Material item : Get.getBannedEntitySpawnItem()) {
+                            for (Material item : Get.getBannedEntitySpawnItem()) {
                                 if (player.getInventory().contains(item)) {
                                     HoldsSpawnItem = true;
                                 }
@@ -96,7 +94,7 @@ public class EntityManager implements Listener {
                     }
                 }
             }
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             String fileName = Get.CurrentDate().replace("/", "_");
             String message = "[> MinecartSpawnEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + event.getVehicle().getLocation().getWorld().toString();
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);

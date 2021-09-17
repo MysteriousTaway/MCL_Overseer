@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Objects;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
 import static org.bukkit.Bukkit.getServer;
 
 public class PlayerManager implements Listener {
@@ -25,11 +24,11 @@ public class PlayerManager implements Listener {
                 Player player = ((Player) event).getPlayer();
                 Player attacker = (Player) event.getDamager();
                 double distance = player.getLocation().distance(attacker.getLocation());
-                if(distance < 3.6) {
+                if (distance < 3.6) {
                     assert player != null;
                     Location location = player.getLocation();
                     // Location of attacked player has to be more than 8000 on x or z axis to be considered valid.
-                    if(!Get.isInPvE(location)) {
+                    if (!Get.isInPvE(location)) {
                         attacker.sendMessage(ChatColor.GOLD + "<[INFO]> " + ChatColor.WHITE + "You dealt " + ChatColor.RED + event.getDamage() + " damage" + ChatColor.WHITE + " to " + player.getDisplayName());
                         String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: " + event.getDamage() + " ATT_HEALTH: " + attacker.getHealth() + " VIC_HEALTH " + player.getHealth();
                         String fileName = Get.CurrentDate().replace("/", "_");
@@ -39,11 +38,11 @@ public class PlayerManager implements Listener {
                     }
                 } else {
                     event.setCancelled(true);
-                    attacker.sendMessage(ChatColor.RED +  "<[!!!]> The use of REACH hack is prohibited on this server.");
+                    attacker.sendMessage(ChatColor.RED + "<[!!!]> The use of REACH hack is prohibited on this server.");
                 }
             }
         } catch (Exception exception) {
-            LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player damage!");
+            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player damage!");
             String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
@@ -63,7 +62,7 @@ public class PlayerManager implements Listener {
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("DeathLog/" + fileName + ".txt", message);
         } catch (Exception exception) {
-            LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player death!");
+            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player death!");
             String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
@@ -74,7 +73,7 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void endPortalListener(PlayerTeleportEvent event) {
-        if(!ConfigManager.Allow_End) {
+        if (!ConfigManager.Allow_End) {
             if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
                 // Get data:
                 Player player = event.getPlayer();
@@ -111,11 +110,11 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        if(event != null) {
+        if (event != null) {
             //Create log file:
             HonorManager.CheckForDataFile(event.getPlayer());
             //Log login:
-            Player player =  event.getPlayer();
+            Player player = event.getPlayer();
             Location location = event.getPlayer().getLocation();
             World world = location.getWorld();
             int x = location.getBlockX();
@@ -129,8 +128,8 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void onPlayerDisconnectEvent(PlayerQuitEvent event) {
-        if(event != null) {
-            Player player =  event.getPlayer();
+        if (event != null) {
+            Player player = event.getPlayer();
             Location location = event.getPlayer().getLocation();
             World world = location.getWorld();
             int x = location.getBlockX();

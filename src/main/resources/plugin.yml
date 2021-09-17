@@ -1,6 +1,6 @@
 name: MCL_Overseer
 version: ${project.version}
-main: me.itsjeras.mcl_overseer.MCL_Overseer
-api-version: 1.16
-authors: [ itsJeras ]
-description: Management and rule tools
+main: me.Taway.MCL_Overseer.MCL_Overseer
+api-version: 1.17
+authors: [ MysteriousTaway ]
+description: Automatic manager, Rule enforcer, Statistics collector plugin. Basically a plugin with "can do" attitude :)

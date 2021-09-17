@@ -1,10 +1,9 @@
-package me.itsjeras.mcl_overseer;
-
-import org.bukkit.plugin.Plugin;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class ConfigManager {
 
@@ -18,7 +17,6 @@ public class ConfigManager {
     public static int OverworldPVE_Z;
     // End
     public static boolean Allow_End;
-
     //Honor manager data:
     public static boolean AllowHonor;
     public static int MaxHonor;
@@ -28,8 +26,10 @@ public class ConfigManager {
     public static int EndEntryPenalty;
     public static int EntitySpawnPenalty;
     public static int BlockPlacementPenalty;
+    //Statistics:
+    public static int SaveFileIntervalTicks;
 
-    public static void ReadFromConfig(){
+    public static void ReadFromConfig() {
         try {
             NetherPVE_X = config.getInt("PvE.Nether.X");
             NetherPVE_Z = config.getInt("PvE.Nether.Z");
@@ -48,21 +48,24 @@ public class ConfigManager {
             EndEntryPenalty = config.getInt("Honor-Score.End-Entry-Penalty");
             EntitySpawnPenalty = config.getInt("Honor-Score.Entity-Spawn-Penalty");
             BlockPlacementPenalty = config.getInt("Honor-Score.Block-Placement-Penalty");
+            //Statistics:
+            SaveFileIntervalTicks = config.getInt("Statistics.Save-File-Interval-Ticks");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoggerInstance.info("<[CONFIG]>");
-        LoggerInstance.info("(int)     NetherPVE_X = " + NetherPVE_X);
-        LoggerInstance.info("(int)     NetherPVE_Z = " + NetherPVE_Z);
-        LoggerInstance.info("(int)     OverworldPVE_X = " + OverworldPVE_X);
-        LoggerInstance.info("(int)     OverworldPVE_Z = " + OverworldPVE_Z);
-        LoggerInstance.info("(boolean) Allow_End = " + Allow_End);
-        LoggerInstance.info("(boolean) AllowHonor = " + AllowHonor);
-        LoggerInstance.info("(int)     MaxHonor = " + MaxHonor);
-        LoggerInstance.info("(int)     HonorForPlaying = " + HonorForPlaying);
-        LoggerInstance.info("(boolean) CheckForAfk = " + CheckForAfk);
-        LoggerInstance.info("(int)     EndEntryPenalty = " + EndEntryPenalty);
-        LoggerInstance.info("(int)     EntitySpawnPenalty = " + EntitySpawnPenalty);
-        LoggerInstance.info("(int)     BlockPlacementPenalty = " + BlockPlacementPenalty);
+        LoggerInstance.warning("\n         <[CONFIG]>");
+        LoggerInstance.info("(int)     NetherPVE_X             = " + NetherPVE_X);
+        LoggerInstance.info("(int)     NetherPVE_Z             = " + NetherPVE_Z);
+        LoggerInstance.info("(int)     OverworldPVE_X          = " + OverworldPVE_X);
+        LoggerInstance.info("(int)     OverworldPVE_Z          = " + OverworldPVE_Z);
+        LoggerInstance.info("(boolean) Allow_End               = " + Allow_End);
+        LoggerInstance.info("(boolean) AllowHonor              = " + AllowHonor);
+        LoggerInstance.info("(int)     MaxHonor                = " + MaxHonor);
+        LoggerInstance.info("(int)     HonorForPlaying         = " + HonorForPlaying);
+        LoggerInstance.info("(boolean) CheckForAfk             = " + CheckForAfk);
+        LoggerInstance.info("(int)     EndEntryPenalty         = " + EndEntryPenalty);
+        LoggerInstance.info("(int)     EntitySpawnPenalty      = " + EntitySpawnPenalty);
+        LoggerInstance.info("(int)     BlockPlacementPenalty   = " + BlockPlacementPenalty);
+        LoggerInstance.info("(int)     SaveFileIntervalTicks   = " + SaveFileIntervalTicks);
     }
 }

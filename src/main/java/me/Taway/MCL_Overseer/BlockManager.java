@@ -1,14 +1,16 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import java.util.Objects;
 
-import static me.itsjeras.mcl_overseer.MCL_Overseer.LoggerInstance;
+import java.util.Objects;
 
 public class BlockManager implements Listener {
 
@@ -39,10 +41,10 @@ public class BlockManager implements Listener {
                 // for loop
             }
             // try catch
-        } catch(Exception exception){
+        } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
-            LoggerInstance.info("<[!!!]> Overseer could not log block place event!");
+            MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log block place event!");
             if (event == null) {
                 message = "(null) [> onBlockPlace Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
                 FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n" + message);

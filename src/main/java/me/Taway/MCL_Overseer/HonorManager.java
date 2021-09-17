@@ -1,4 +1,4 @@
-package me.itsjeras.mcl_overseer;
+package me.Taway.MCL_Overseer;
 
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -20,8 +20,8 @@ public class HonorManager {
     static String path;
     static FileConfiguration config;
 
-    public static void ChangeHonorValueOfPlayer (Player player, int value) {
-        if(ConfigManager.AllowHonor) {
+    public static void ChangeHonorValueOfPlayer(Player player, int value) {
+        if (ConfigManager.AllowHonor) {
             // Load config to
             SetConfigFile(player.getUniqueId());
             //get honor
@@ -39,7 +39,7 @@ public class HonorManager {
                     config.set(valuePath, honor);
                     config.save(path);
                     // Inform player of honor change:
-                    player.sendMessage("<[!!]> Your Honor has changed! (" + value  + ") your Honor is now: " + honor + "/" + ConfigManager.MaxHonor);
+                    player.sendMessage("<[!!]> Your Honor has changed! (" + value + ") your Honor is now: " + honor + "/" + ConfigManager.MaxHonor);
                     // Check if honor is less than 0:
                     if (honor < 0) {
                         Bukkit.getBanList(BanList.Type.NAME).addBan(player.getDisplayName(), "You broke rules of PvE too many times. If you think this was a mistake contact a moderator on Discord.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>", null, "<[OVERSEER]>");
@@ -58,7 +58,7 @@ public class HonorManager {
     }
 
     private static void SetConfigFile(UUID UUID) {
-        File DataFile = new File(plugin.getDataFolder() , "/PlayerData/" + UUID.toString() + ".yml");
+        File DataFile = new File(plugin.getDataFolder(), "/PlayerData/" + UUID.toString() + ".yml");
         if (DataFile.exists()) {
             path = "plugins/MCL_Overseer/PlayerData/" + UUID + ".yml";
             config = YamlConfiguration.loadConfiguration(DataFile);
@@ -79,10 +79,10 @@ public class HonorManager {
         }
     }
 
-    public static void CheckForDataFile(Player player){
+    public static void CheckForDataFile(Player player) {
         UUID UUID = player.getUniqueId();
         File file = new File("plugins/MCL_Overseer/PlayerData/", UUID + ".yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
                 FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP: " + player.getAddress().getHostName());
