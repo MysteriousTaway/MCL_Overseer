@@ -3,6 +3,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -14,9 +17,15 @@ public final class MCL_Overseer extends JavaPlugin {
     // Update because PaperMC wants me to do this:
     // Public instances:
     public static Server ServerInstance;
+    public static BukkitScheduler SchedulerInstance;
+    public static MCL_Overseer PluginInstance;
     public static java.util.logging.Logger LoggerInstance = java.util.logging.Logger.getLogger("<OVERSEER>");
     @Override
     public void onEnable() {
+        // Retarded server startup logic that i don't understand:
+        ServerInstance = getServer();
+        SchedulerInstance = ServerInstance.getScheduler();
+        PluginInstance = getPlugin(getClass());
         // Plugin startup logic
         //OVERSEER LOGO:
         LoggerInstance.info("\n                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
@@ -49,10 +58,22 @@ public final class MCL_Overseer extends JavaPlugin {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
-        // NEW! Update 0.3
+
         // Analytics:
         Analytics.CheckForDataFile();
         Analytics.SetConfigFile();
+
+        // NEW! Update 0.3.5
+        try {
+            BukkitTask SaveAnalytics = new Analytics().runTask(PluginInstance);
+            SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
+        } catch (Exception exception) {
+            String message;
+            String fileName = Get.CurrentDate().replace("/", "_");
+            message = "[> onEnable Exception (Analytics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+        }
         //Commands:
     }
 

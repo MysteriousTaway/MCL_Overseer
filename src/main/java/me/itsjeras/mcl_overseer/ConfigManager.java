@@ -18,7 +18,6 @@ public class ConfigManager {
     public static int OverworldPVE_Z;
     // End
     public static boolean Allow_End;
-
     //Honor manager data:
     public static boolean AllowHonor;
     public static int MaxHonor;
@@ -28,6 +27,8 @@ public class ConfigManager {
     public static int EndEntryPenalty;
     public static int EntitySpawnPenalty;
     public static int BlockPlacementPenalty;
+    //Analytics:
+    public static int SaveFileIntervalTicks;
 
     public static void ReadFromConfig(){
         try {
@@ -48,6 +49,8 @@ public class ConfigManager {
             EndEntryPenalty = config.getInt("Honor-Score.End-Entry-Penalty");
             EntitySpawnPenalty = config.getInt("Honor-Score.Entity-Spawn-Penalty");
             BlockPlacementPenalty = config.getInt("Honor-Score.Block-Placement-Penalty");
+            //Analytics:
+            SaveFileIntervalTicks = config.getInt("Analytics.Save-File-Interval-Ticks");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,5 +67,6 @@ public class ConfigManager {
         LoggerInstance.info("(int)     EndEntryPenalty = " + EndEntryPenalty);
         LoggerInstance.info("(int)     EntitySpawnPenalty = " + EntitySpawnPenalty);
         LoggerInstance.info("(int)     BlockPlacementPenalty = " + BlockPlacementPenalty);
+        LoggerInstance.info("(int)     SaveFileIntervalTicks = " + SaveFileIntervalTicks);
     }
 }
