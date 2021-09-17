@@ -49,54 +49,57 @@ public class Statistics extends BukkitRunnable implements Listener {
     public static int New_Chunks_Loaded;
 
     public static void SetConfigFile() {
-        File DataFile = new File(plugin.getDataFolder() , "/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml");
+        File DataFile = new File(plugin.getDataFolder(), "/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml");
         if (DataFile.exists()) {
             path = "plugins/MCL_Overseer/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml";
             config = YamlConfiguration.loadConfiguration(DataFile);
+
+            LoadStatistics();
+
         } else {
             String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> SetConfigFile Exception (ANALYTICS) <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime();
+            String message = "[> SetConfigFile Exception (Statistics) <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime();
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
 
             CheckForDataFile();
         }
     }
 
-
-    public static void CheckForDataFile(){
+    public static void CheckForDataFile() {
         File file = new File("plugins/MCL_Overseer/_Statistics/", Get.CurrentDate().replace("/", "_") + ".yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
                 FileManager.writeToFile("/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml",
-                        "Connection:"+
-                                "\n  Player-Connects: 0"+
-                                "\n  Player-Disconnects: 0"+
-                                "\nHealth:"+
-                                "\n  Health-Lost: 0"+
-                                "\n  Health-Regenerated: 0"+
-                                "\nBlocks:"+
-                                "\n  Blocks-Broken: 0 "+
-                                "\n  Blocks-Built: 0"+
-                                "\nChat:"+
-                                "\n  Messages-Sent: 0"+
-                                "\n  Commands-Executed: 0"+
-                                "\nPlayer:"+
-                                "\n  Player-Deaths: 0"+
-                                "\n  Experience-Received: 0"+
-                                "\n  Advancements-Done: 0"+
-                                "\n  Overworld-Entered-Count: 0"+
-                                "\n  Nether-Entered-Count: 0"+
-                                "\n  End-Entered-Count: 0"+
-                                "\nEntity:"+
-                                "\n  Entities-Spawned: 0"+
-                                "\n  Entity-Died-Amount: 0"+
-                                "\nChunks:"+
+                        "Connection:" +
+                                "\n  Player-Connects: 0" +
+                                "\n  Player-Disconnects: 0" +
+                                "\nHealth:" +
+                                "\n  Health-Lost: 0" +
+                                "\n  Health-Regenerated: 0" +
+                                "\nBlocks:" +
+                                "\n  Blocks-Broken: 0 " +
+                                "\n  Blocks-Built: 0" +
+                                "\nChat:" +
+                                "\n  Messages-Sent: 0" +
+                                "\n  Commands-Executed: 0" +
+                                "\nPlayer:" +
+                                "\n  Player-Deaths: 0" +
+                                "\n  Experience-Received: 0" +
+                                "\n  Advancements-Done: 0" +
+                                "\n  Overworld-Entered-Count: 0" +
+                                "\n  Nether-Entered-Count: 0" +
+                                "\n  End-Entered-Count: 0" +
+                                "\nEntity:" +
+                                "\n  Entities-Spawned: 0" +
+                                "\n  Entity-Died-Amount: 0" +
+                                "\nChunks:" +
                                 "\n  New-Chunks-Loaded: 0"
                 );
+                LoggerInstance.warning("Created new statistics file!");
             } catch (IOException exception) {
                 String fileName = Get.CurrentDate().replace("/", "_");
-                String message = "[> CheckForDataFile Exception (ANALYTICS)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
+                String message = "[> CheckForDataFile Exception (Statistics)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
                 FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             }
         }
@@ -105,7 +108,7 @@ public class Statistics extends BukkitRunnable implements Listener {
     // ANALYTICS:
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        if(event.getEntity() instanceof Player ) {
+        if (event.getEntity() instanceof Player) {
             Health_Lost += event.getDamage();
         }
     }
@@ -125,7 +128,8 @@ public class Statistics extends BukkitRunnable implements Listener {
         Player_Disconnects++;
     }
 
-    @EventHandler @Deprecated
+    @EventHandler
+    @Deprecated
     public void onPlayerChat(PlayerChatEvent event) {
         Messages_Sent++;
     }
@@ -142,7 +146,7 @@ public class Statistics extends BukkitRunnable implements Listener {
 
     @EventHandler
     public void EntityRegainHealthEvent(EntityRegainHealthEvent event) {
-        if(event.getEntity() instanceof Player ) {
+        if (event.getEntity() instanceof Player) {
             Health_Regenerated += event.getAmount();
         }
     }
@@ -164,14 +168,14 @@ public class Statistics extends BukkitRunnable implements Listener {
 
     @EventHandler
     public void PlayerTeleportEvent(PlayerTeleportEvent event) {
-        switch(event.getTo().getWorld().getName()) {
-            case("world") -> {
+        switch (event.getTo().getWorld().getName()) {
+            case ("world") -> {
                 Overworld_Entered_Count++;
             }
-            case("world_nether") -> {
+            case ("world_nether") -> {
                 Nether_Entered_Count++;
             }
-            case("world_the_end") -> {
+            case ("world_the_end") -> {
                 End_Entered_Count++;
             }
         }
@@ -179,14 +183,14 @@ public class Statistics extends BukkitRunnable implements Listener {
 
     @EventHandler
     public void EntityDeathEvent(EntityDeathEvent event) {
-        if(!(event.getEntity() instanceof Player)){
+        if (!(event.getEntity() instanceof Player)) {
             Entity_Died_Amount++;
         }
     }
 
     @EventHandler
     public void NewChunkLoadEvent(ChunkLoadEvent event) {
-        if(event.isNewChunk()) {
+        if (event.isNewChunk()) {
             New_Chunks_Loaded++;
         }
     }
@@ -263,5 +267,66 @@ public class Statistics extends BukkitRunnable implements Listener {
             LoggerInstance.severe("BukkitRunnable ERROR while saving analytics config! " + exception.getMessage());
         }
 
+    }
+
+    public static void LoadStatistics() {
+        try {
+            // Load data:
+            Player_Connects = config.getInt("Connection.Player-Connects");
+            Player_Disconnects = config.getInt("Connection.Player-Disconnects");
+
+            Health_Lost = config.getDouble("Health.Health-Lost");
+            Health_Regenerated = config.getDouble("Health.Health-Regenerated");
+
+            Blocks_Broken = config.getInt("Blocks.Blocks-Broken");
+            Blocks_Built = config.getInt("Blocks.Blocks-Built");
+
+            Messages_Sent = config.getInt("Chat.Messages-Sent");
+            Commands_Executed = config.getInt("Chat.Commands-Executed");
+
+            Player_Deaths = config.getInt("Player.Player-Deaths");
+            Experience_Received = config.getInt("Player.Experience-Received");
+            Advancements_Done = config.getInt("Player.Advancements-Done");
+            Overworld_Entered_Count = config.getInt("Player.Overworld-Entered-Count");
+            Nether_Entered_Count = config.getInt("Player.Nether-Entered-Count");
+            End_Entered_Count = config.getInt("Player.End-Entered-Count");
+
+            Entities_Spawned = config.getInt("Entity.Entities-Spawned");
+            Entity_Died_Amount = config.getInt("Entity.Entity-Died-Amount");
+
+            New_Chunks_Loaded = config.getInt("Chunks.New-Chunks-Loaded");
+
+            // Print to console:
+            LoggerInstance.warning("\n         <[LOADED STATS]>");
+            LoggerInstance.info("(int)     Player_Connects         = " + Player_Connects);
+            LoggerInstance.info("(int)     Player_Disconnects      = " + Player_Disconnects);
+
+            LoggerInstance.info("(double)  Health_Lost             = " + Health_Lost);
+            LoggerInstance.info("(double)  Health_Regenerated      = " + Health_Regenerated);
+
+            LoggerInstance.info("(int)     Blocks_Broken           = " + Blocks_Broken);
+            LoggerInstance.info("(int)     Blocks_Built            = " + Blocks_Built);
+
+            LoggerInstance.info("(int)     Messages_Sent           = " + Messages_Sent);
+            LoggerInstance.info("(int)     Commands_Executed       = " + Commands_Executed);
+
+            LoggerInstance.info("(int)     Player_Deaths           = " + Player_Deaths);
+            LoggerInstance.info("(int)     Experience_Received     = " + Experience_Received);
+            LoggerInstance.info("(int)     Advancements_Done       = " + Advancements_Done);
+            LoggerInstance.info("(int)     Overworld_Entered_Count = " + Overworld_Entered_Count);
+            LoggerInstance.info("(int)     Nether_Entered_Count    = " + Nether_Entered_Count);
+            LoggerInstance.info("(int)     End_Entered_Count       = " + End_Entered_Count);
+
+            LoggerInstance.info("(int)     Entities_Spawned        = " + Entities_Spawned);
+            LoggerInstance.info("(int)     Entity_Died_Amount      = " + Entity_Died_Amount);
+
+            LoggerInstance.info("(int)     New_Chunks_Loaded       = " + New_Chunks_Loaded);
+        } catch (Exception exception) {
+            String message;
+            String fileName = Get.CurrentDate().replace("/", "_");
+            message = "[> Statistics <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+        }
     }
 }

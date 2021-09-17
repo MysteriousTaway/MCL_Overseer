@@ -1,11 +1,15 @@
 package me.Taway.MCL_Overseer;
 
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+
 import java.util.Objects;
 
 public class BlockManager implements Listener {
@@ -37,7 +41,7 @@ public class BlockManager implements Listener {
                 // for loop
             }
             // try catch
-        } catch(Exception exception){
+        } catch (Exception exception) {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log block place event!");

@@ -9,18 +9,16 @@ import java.util.Formatter;
 public class FileManager {
 
     private static boolean CreateFile = true;
+
     public static void writeToFile(String filename, String text) {
-        try
-        {
+        try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("plugins/MCL_Overseer/" + filename, true));
             writer.append(text);
             writer.newLine();
             writer.close();
-        }
-        catch(Exception exception)
-        {
+        } catch (Exception exception) {
             MCL_Overseer.LoggerInstance.severe("Exception: " + exception.getMessage());
-            if(CreateFile) {
+            if (CreateFile) {
                 MCL_Overseer.LoggerInstance.severe("<[!!!]> Creating a new file as an attempt to fix the exception!");
                 CreateFile = false;
                 try {

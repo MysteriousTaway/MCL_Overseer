@@ -1,4 +1,5 @@
 package me.Taway.MCL_Overseer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
@@ -18,6 +19,7 @@ public final class MCL_Overseer extends JavaPlugin {
     public static BukkitScheduler SchedulerInstance;
     public static MCL_Overseer PluginInstance;
     public static java.util.logging.Logger LoggerInstance = java.util.logging.Logger.getLogger("<OVERSEER>");
+
     @Override
     public void onEnable() {
         // Retarded server startup logic that i don't understand:
@@ -53,16 +55,40 @@ public final class MCL_Overseer extends JavaPlugin {
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
             message = "[> onEnable Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
+
+        // Set all statistics to 0
+        NullStats();
 
         // Statistics:
         Statistics.CheckForDataFile();
         Statistics.SetConfigFile();
 
         // NEW! Update 0.3.5
-        // Set data for statistics:
+        // Make scheduler:
+        try {
+            BukkitTask SaveAnalytics = new Statistics().runTask(PluginInstance);
+            SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
+        } catch (Exception exception) {
+            String message;
+            String fileName = Get.CurrentDate().replace("/", "_");
+            message = "[> onEnable Exception (Statistics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+        }
+        //Commands:
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        Statistics.SaveStatistics();
+        getServer().broadcastMessage(ChatColor.RED + "<[!!!]> " + ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
+    }
+
+    private static void NullStats() {
         Statistics.Player_Connects = 0;
         Statistics.Player_Disconnects = 0;
         Statistics.Health_Lost = 0;
@@ -80,24 +106,5 @@ public final class MCL_Overseer extends JavaPlugin {
         Statistics.Entities_Spawned = 0;
         Statistics.Entity_Died_Amount = 0;
         Statistics.New_Chunks_Loaded = 0;
-        // Make scheduler:
-        try {
-            BukkitTask SaveAnalytics = new Statistics().runTask(PluginInstance);
-            SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
-        } catch (Exception exception) {
-            String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> onEnable Exception (Statistics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt","\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
-        }
-        //Commands:
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        Statistics.SaveStatistics();
-        getServer().broadcastMessage(ChatColor.RED + "<[!!!]> "+ ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
     }
 }

@@ -8,19 +8,20 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class ChatManager implements Listener {
 
-    @EventHandler @Deprecated
+    @EventHandler
+    @Deprecated
     public void onPlayerChat(PlayerChatEvent event) {
         Player sender = event.getPlayer();
-        String message = "<DATE: " +Get.CurrentDate()+ " TIME: " + Get.CurrentTime() + " >" +" PLAYER: " + sender.getDisplayName() + " TEXT: " + event.getMessage();
-        String fileName = Get.CurrentDate().replace("/","_");
+        String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " PLAYER: " + sender.getDisplayName() + " TEXT: " + event.getMessage();
+        String fileName = Get.CurrentDate().replace("/", "_");
         FileManager.writeToFile("ChatLog/" + fileName + ".txt", message);
     }
 
     @EventHandler
     public void onCommandExecution(PlayerCommandPreprocessEvent event) {
         Player sender = event.getPlayer();
-        String message = "<DATE: " +Get.CurrentDate()+ " TIME: " + Get.CurrentTime() + " >" +" PLAYER: " + sender.getDisplayName() + " COMMAND: " + event.getMessage();
-        String fileName = Get.CurrentDate().replace("/","_");
+        String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " PLAYER: " + sender.getDisplayName() + " COMMAND: " + event.getMessage();
+        String fileName = Get.CurrentDate().replace("/", "_");
         FileManager.writeToFile("CommandLog/" + fileName + ".txt", message);
     }
 }
