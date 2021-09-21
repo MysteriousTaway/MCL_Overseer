@@ -16,7 +16,7 @@ import java.util.Objects;
 public class EntityManager implements Listener {
 
     @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent event) {
+    protected void onEntitySpawn(EntitySpawnEvent event) {
         try {
             // Find if spawned entity is on banned list:
             for (EntityType entity : Get.getBannedEntityList()) {
@@ -66,7 +66,7 @@ public class EntityManager implements Listener {
     }
 
     @EventHandler
-    public void MinecartSpawnEvent(VehicleCreateEvent event) {
+    protected void MinecartSpawnEvent(VehicleCreateEvent event) {
         try {
             if (event != null) {
                 for (EntityType entity : Get.getBannedMinecartList()) {

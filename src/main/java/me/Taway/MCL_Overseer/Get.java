@@ -19,25 +19,25 @@ import java.util.function.Supplier;
 import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class Get {
-    public static int RandomNumInRange(int min, int max) {
+    protected static int RandomNumInRange(int min, int max) {
         // Generates a random number in a specified range.
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    public static String CurrentTime() {
+    protected static String CurrentTime() {
         //return System.currentTimeMillis();
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    public static String CurrentDate() {
+    protected static String CurrentDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    public static EntityType[] getBannedEntityList() {
+    protected static EntityType[] getBannedEntityList() {
         return new EntityType[]{
                 EntityType.ENDER_CRYSTAL,
                 EntityType.PRIMED_TNT,
@@ -45,13 +45,13 @@ public class Get {
         };
     }
 
-    public static Material[] getBannedBlockList() {
+    protected static Material[] getBannedBlockList() {
         return new Material[]{
                 Material.TNT,
         };
     }
 
-    public static Material[] getBannedEntitySpawnItem() {
+    protected static Material[] getBannedEntitySpawnItem() {
         return new Material[]{
                 Material.SOUL_SAND,
                 Material.END_CRYSTAL,
@@ -60,13 +60,13 @@ public class Get {
         };
     }
 
-    public static EntityType[] getBannedMinecartList() {
+    protected static EntityType[] getBannedMinecartList() {
         return new EntityType[]{
                 EntityType.MINECART_TNT
         };
     }
 
-    public static boolean isInPvE(Location location) {
+    protected static boolean isInPvE(Location location) {
         if (Objects.requireNonNull(location.getWorld()).getName().equals("world")) {
             return (-ConfigManager.OverworldPVE_X < location.getBlockX() && location.getBlockX() < ConfigManager.OverworldPVE_X) && (-ConfigManager.OverworldPVE_Z < location.getBlockZ() && location.getBlockZ() < ConfigManager.OverworldPVE_Z);
         } else if (location.getWorld().getName().equals("world_nether")) {
@@ -75,7 +75,7 @@ public class Get {
         return false;
     }
 
-    public static List<Entity> getNearbyEntityList(Entity entity) {
+    protected static List<Entity> getNearbyEntityList(Entity entity) {
         List<Entity> entities = null;
         for (int i = 0; i < 256; i++) {
             entities = entity.getNearbyEntities(i, 16, i);
@@ -85,7 +85,7 @@ public class Get {
         return entities;
     }
 
-    public static List<Player> getNearbyPlayerList(Entity entity) {
+    protected static List<Player> getNearbyPlayerList(Entity entity) {
         List<Player> players = new ArrayList<>();
         for (Player p : Bukkit.getOnlinePlayers()) {
             double distance;
@@ -98,17 +98,17 @@ public class Get {
         }
         return players;
     }
-//    public static EntityType[] getBannedEntityList_Global() {
+//    protected static EntityType[] getBannedEntityList_Global() {
 //        return new EntityType[] {
 //
 //        };
 //    }
-//    public static Material[] getBannedBlockList_Global() {
+//    protected static Material[] getBannedBlockList_Global() {
 //        return new Material[] {
 //
 //        };
 //    }
-//    public static Material[] getBannedInteractionList_Global() {
+//    protected static Material[] getBannedInteractionList_Global() {
 //        return new Material[] {
 //                Material.END_PORTAL_FRAME,
 //        };

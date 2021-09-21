@@ -20,7 +20,7 @@ public class HonorManager {
     static String path;
     static FileConfiguration config;
 
-    public static void ChangeHonorValueOfPlayer(Player player, int value) {
+    protected static void ChangeHonorValueOfPlayer(Player player, int value) {
         if (ConfigManager.AllowHonor) {
             // Load config to
             SetConfigFile(player.getUniqueId());
@@ -69,7 +69,7 @@ public class HonorManager {
         }
     }
 
-    public static void SetIP(Player player) {
+    protected static void SetIP(Player player) {
         SetConfigFile(player.getUniqueId());
         config.set(player.getUniqueId() + ".IP", player.getAddress().getHostName());
         try {
@@ -79,7 +79,7 @@ public class HonorManager {
         }
     }
 
-    public static void CheckForDataFile(Player player) {
+    protected static void CheckForDataFile(Player player) {
         UUID UUID = player.getUniqueId();
         File file = new File("plugins/MCL_Overseer/PlayerData/", UUID + ".yml");
         if (!file.exists()) {

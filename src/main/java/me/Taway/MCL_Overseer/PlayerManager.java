@@ -18,7 +18,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public class PlayerManager implements Listener {
     @EventHandler
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+    protected void onPlayerDamage(EntityDamageByEntityEvent event) {
         try {
             if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
                 Player player = ((Player) event).getPlayer();
@@ -52,7 +52,7 @@ public class PlayerManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    protected void onPlayerDeath(PlayerDeathEvent event) {
         try {
             Player deadPlayer = event.getEntity();
             Location location = event.getEntity().getLocation();
@@ -72,7 +72,7 @@ public class PlayerManager implements Listener {
     }
 
     @EventHandler
-    public void endPortalListener(PlayerTeleportEvent event) {
+    protected void endPortalListener(PlayerTeleportEvent event) {
         if (!ConfigManager.Allow_End) {
             if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
                 // Get data:
@@ -109,7 +109,7 @@ public class PlayerManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinEvent(PlayerJoinEvent event) {
+    protected void onPlayerJoinEvent(PlayerJoinEvent event) {
         if (event != null) {
             //Create log file:
             HonorManager.CheckForDataFile(event.getPlayer());
@@ -127,7 +127,7 @@ public class PlayerManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDisconnectEvent(PlayerQuitEvent event) {
+    protected void onPlayerDisconnectEvent(PlayerQuitEvent event) {
         if (event != null) {
             Player player = event.getPlayer();
             Location location = event.getPlayer().getLocation();

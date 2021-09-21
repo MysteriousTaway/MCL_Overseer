@@ -3,6 +3,8 @@ package me.Taway.MCL_Overseer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Set;
+
 import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class ConfigManager {
@@ -10,26 +12,27 @@ public class ConfigManager {
     private static final Plugin plugin = MCL_Overseer.getPlugin(MCL_Overseer.class);
     static FileConfiguration config = plugin.getConfig();
     //Nether:
-    public static int NetherPVE_X;
-    public static int NetherPVE_Z;
+    protected static int NetherPVE_X;
+    protected static int NetherPVE_Z;
     // Overworld:
-    public static int OverworldPVE_X;
-    public static int OverworldPVE_Z;
+    protected static int OverworldPVE_X;
+    protected static int OverworldPVE_Z;
     // End
-    public static boolean Allow_End;
+    protected static boolean Allow_End;
     //Honor manager data:
-    public static boolean AllowHonor;
-    public static int MaxHonor;
-    public static int HonorForPlaying;
-    public static boolean CheckForAfk;
+    protected static boolean AllowHonor;
+    protected static int MaxHonor;
+    protected static int HonorForPlaying;
+    protected static boolean CheckForAfk;
     //Penalties:
-    public static int EndEntryPenalty;
-    public static int EntitySpawnPenalty;
-    public static int BlockPlacementPenalty;
+    protected static int EndEntryPenalty;
+    protected static int EntitySpawnPenalty;
+    protected static int BlockPlacementPenalty;
     //Statistics:
-    public static int SaveFileIntervalTicks;
+    protected static int SaveFileIntervalTicks;
+    protected static int RunTimedChecksTickInterval;
 
-    public static void ReadFromConfig() {
+    protected static void ReadFromConfig() {
         try {
             NetherPVE_X = config.getInt("PvE.Nether.X");
             NetherPVE_Z = config.getInt("PvE.Nether.Z");
@@ -50,22 +53,26 @@ public class ConfigManager {
             BlockPlacementPenalty = config.getInt("Honor-Score.Block-Placement-Penalty");
             //Statistics:
             SaveFileIntervalTicks = config.getInt("Statistics.Save-File-Interval-Ticks");
-        } catch (Exception e) {
-            e.printStackTrace();
+            RunTimedChecksTickInterval = config.getInt("Statistics.Run-Timed-Checks-Tick-Interval");
+            
+
+            PrintConfig();
+        } catch (Exception exception) {
+            String message;
+            String fileName = Get.CurrentDate().replace("/", "_");
+            message = "[> ReadFromConfig Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
-        LoggerInstance.warning("\n         <[CONFIG]>");
-        LoggerInstance.info("(int)     NetherPVE_X             = " + NetherPVE_X);
-        LoggerInstance.info("(int)     NetherPVE_Z             = " + NetherPVE_Z);
-        LoggerInstance.info("(int)     OverworldPVE_X          = " + OverworldPVE_X);
-        LoggerInstance.info("(int)     OverworldPVE_Z          = " + OverworldPVE_Z);
-        LoggerInstance.info("(boolean) Allow_End               = " + Allow_End);
-        LoggerInstance.info("(boolean) AllowHonor              = " + AllowHonor);
-        LoggerInstance.info("(int)     MaxHonor                = " + MaxHonor);
-        LoggerInstance.info("(int)     HonorForPlaying         = " + HonorForPlaying);
-        LoggerInstance.info("(boolean) CheckForAfk             = " + CheckForAfk);
-        LoggerInstance.info("(int)     EndEntryPenalty         = " + EndEntryPenalty);
-        LoggerInstance.info("(int)     EntitySpawnPenalty      = " + EntitySpawnPenalty);
-        LoggerInstance.info("(int)     BlockPlacementPenalty   = " + BlockPlacementPenalty);
-        LoggerInstance.info("(int)     SaveFileIntervalTicks   = " + SaveFileIntervalTicks);
+    }
+
+    protected static void PrintConfig() {
+        LoggerInstance.warning("<[CONFIG]>");
+        Set<String> KeySet = config.getKeys(true);
+        for (String key : KeySet) {
+            if(key.contains(".")) {
+                LoggerInstance.info(key + "  =>  " + config.get(key));
+            }
+        }
     }
 }
