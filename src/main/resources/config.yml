@@ -28,3 +28,5 @@ Honor-Score:
 Statistics:
   # Every 6000 ticks which is 5 minutes
   Save-File-Interval-Ticks: 6000
+  # Every 6000 do some timed statistics calculation:
+  Run-Timed-Checks-Tick-Interval: 6000

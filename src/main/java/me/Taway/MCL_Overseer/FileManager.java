@@ -2,39 +2,31 @@ package me.Taway.MCL_Overseer;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.util.Formatter;
+
+import static me.Taway.MCL_Overseer.MCL_Overseer.LoggerInstance;
 
 public class FileManager {
 
-    private static boolean CreateFile = true;
-
-    public static void writeToFile(String filename, String text) {
+    protected static void writeToFile(String filename, String text) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("plugins/MCL_Overseer/" + filename, true));
+            File file = new File("plugins/MCL_Overseer/" + filename);
+            if (!file.exists()) {
+                LoggerInstance.severe("File not found! [" + file.getPath() + "]");
+                file.createNewFile();
+                LoggerInstance.warning("Created file! [" + file.getPath() + "]");
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
             writer.append(text);
             writer.newLine();
             writer.close();
         } catch (Exception exception) {
-            MCL_Overseer.LoggerInstance.severe("Exception: " + exception.getMessage());
-            if (CreateFile) {
-                MCL_Overseer.LoggerInstance.severe("<[!!!]> Creating a new file as an attempt to fix the exception!");
-                CreateFile = false;
-                try {
-                    Formatter formatter = new Formatter("plugins/MCL_Overseer/" + filename);
-                    formatter.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                MCL_Overseer.LoggerInstance.severe("<[!!!]> Creating a new file did not fix the exception!");
-                CreateFile = true;
-            }
+            LoggerInstance.severe("Exception: " + exception.getMessage());
+            LoggerInstance.severe("!!!! THIS ERROR CANNOT BE LOGGED TO EXCEPTION LOG FILE !!!!");
         }
     }
 
-    public static void CheckForFolders() {
+    protected static void CheckForFolders() {
         // Files:
         File[] Files = {
                 new File("plugins/MCL_Overseer/ActivityLog/"),
@@ -47,13 +39,12 @@ public class FileManager {
                 new File("plugins/MCL_Overseer/PlayerData/"),
                 new File("plugins/MCL_Overseer/_Statistics/"),
                 new File("plugins/MCL_Overseer/_Analytics/"),
-
         };
         try {
             for (File file : Files) {
                 if (!file.exists()) {
                     file.mkdir();
-                    MCL_Overseer.LoggerInstance.warning("CREATED FILE! [" + file.getPath() + "]");
+                    LoggerInstance.warning("CREATED FILE! [" + file.getPath() + "]");
                 }
             }
         } catch (Exception exception) {

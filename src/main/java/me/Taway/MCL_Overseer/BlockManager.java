@@ -15,7 +15,7 @@ import java.util.Objects;
 public class BlockManager implements Listener {
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
+    protected void onBlockPlace(BlockPlaceEvent event) {
         try {
             for (Material material : Get.getBannedBlockList()) {
                 if (event.getBlock().getType() == material) {

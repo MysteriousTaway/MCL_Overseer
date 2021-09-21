@@ -8,26 +8,26 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.Set;
 
 public final class MCL_Overseer extends JavaPlugin {
 
-    public File config = new File(getDataFolder(), "config.yml");
+    protected File config = new File(getDataFolder(), "config.yml");
+    protected static Server ServerInstance;
+    protected static BukkitScheduler SchedulerInstance;
+    protected static MCL_Overseer PluginInstance;
+    protected static java.util.logging.Logger LoggerInstance = java.util.logging.Logger.getLogger("<OVERSEER>");
 
-    // Update because PaperMC wants me to do this:
-    // Public instances:
-    public static Server ServerInstance;
-    public static BukkitScheduler SchedulerInstance;
-    public static MCL_Overseer PluginInstance;
-    public static java.util.logging.Logger LoggerInstance = java.util.logging.Logger.getLogger("<OVERSEER>");
+    private static final boolean FeatureTestRun = false;
 
     @Override
     public void onEnable() {
-        // Retarded server startup logic that i don't understand:
+        // Retarded server startup logic that I totally understand:
         ServerInstance = getServer();
         SchedulerInstance = ServerInstance.getScheduler();
         PluginInstance = getPlugin(getClass());
         // Plugin startup logic
-        //OVERSEER LOGO:
+        // OVERSEER LOGO:
         LoggerInstance.info("\n                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
         PluginManager manager = getServer().getPluginManager();
 
@@ -44,67 +44,57 @@ public final class MCL_Overseer extends JavaPlugin {
         FileManager.CheckForFolders();
         // Listeners:
         try {
-            // Version 0.1
             manager.registerEvents(new ChatManager(), this);
             manager.registerEvents(new PlayerManager(), this);
             manager.registerEvents(new BlockManager(), this);
             manager.registerEvents(new EntityManager(), this);
-            // NEW! in version 0.3
-            manager.registerEvents(new Statistics(), this);
+            manager.registerEvents(new StatisticsHandler(), this);
         } catch (Exception exception) {
+            LoggerInstance.severe("Event register exception! " + exception.getMessage());
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> onEnable Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            message = "[> onEnable Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Exception message: \n" + exception.getMessage();
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
 
-        // Set all statistics to 0
-        NullStats();
-
         // Statistics:
-        Statistics.CheckForDataFile();
-        Statistics.SetConfigFile();
+        StatisticsManager.CheckForDataFile();
+        StatisticsManager.SetConfigFile();
 
-        // NEW! Update 0.3.5
         // Make scheduler:
         try {
-            BukkitTask SaveAnalytics = new Statistics().runTask(PluginInstance);
+            // Analytics AutoSave:
+            BukkitTask SaveAnalytics = new StatisticsManager().runTask(PluginInstance);
             SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
+            // Interval code calculations:
+            BukkitTask TimedStatisticsCalculation = new StatisticsHandler().runTask(PluginInstance);
+            SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) TimedStatisticsCalculation, 0, ConfigManager.RunTimedChecksTickInterval);
         } catch (Exception exception) {
+            LoggerInstance.severe(" onEnable scheduler exception! " + exception.getMessage());
             String message;
             String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> onEnable Exception (Statistics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
+            message = "[> onEnable Exception (Statistics scheduler)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Exception Message: \n" + exception.getMessage();
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
         //Commands:
+
+
+
+// !    TESTS:
+        if(FeatureTestRun) {
+            String fileName = Get.CurrentDate().replace("/", "_");
+            String message = "[> FEATURE TEST RUN! <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + "TEST MESSAGE!";
+            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+        }
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Statistics.SaveStatistics();
+        StatisticsManager.SaveStatistics();
+        Analytics.Run();
         getServer().broadcastMessage(ChatColor.RED + "<[!!!]> " + ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
-    }
-
-    private static void NullStats() {
-        Statistics.Player_Connects = 0;
-        Statistics.Player_Disconnects = 0;
-        Statistics.Health_Lost = 0;
-        Statistics.Health_Regenerated = 0;
-        Statistics.Blocks_Broken = 0;
-        Statistics.Blocks_Built = 0;
-        Statistics.Messages_Sent = 0;
-        Statistics.Commands_Executed = 0;
-        Statistics.Player_Deaths = 0;
-        Statistics.Experience_Received = 0;
-        Statistics.Advancements_Done = 0;
-        Statistics.Overworld_Entered_Count = 0;
-        Statistics.Nether_Entered_Count = 0;
-        Statistics.End_Entered_Count = 0;
-        Statistics.Entities_Spawned = 0;
-        Statistics.Entity_Died_Amount = 0;
-        Statistics.New_Chunks_Loaded = 0;
     }
 }
