@@ -265,6 +265,7 @@ public class StatisticsManager extends BukkitRunnable {
             }
         }
     }
+
     @Override
     public void run() {
         try {

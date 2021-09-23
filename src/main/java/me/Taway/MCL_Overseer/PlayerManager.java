@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.io.File;
 import java.util.Objects;
 
 import static org.bukkit.Bukkit.getServer;
@@ -88,11 +89,6 @@ public class PlayerManager implements Listener {
                 } else {
                     player.setHealth(0);
                 }
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 Location location = event.getPlayer().getLocation();
                 World world = location.getWorld();
                 assert world != null;
@@ -123,6 +119,25 @@ public class PlayerManager implements Listener {
             String message = "[> Join <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
+
+//            Send player welcome message from the text file:
+            try {
+                File WelcomeFile = new File("plugins/MCL_Overseer/Files/WelcomeMessage.txt");
+                String[] text = FileManager.readFromFile(WelcomeFile.toString());
+                if (text != null) {
+                    player.sendMessage(ChatColor.GOLD + "<AUTOMATED MESSAGE>\n");
+                    for (String TextLine : text) {
+                        player.sendMessage(ChatColor.WHITE + Get.cleanTextContent(TextLine));
+                    }
+                    player.sendMessage(ChatColor.GOLD + "</AUTOMATED MESSAGE>");
+                }
+            } catch (Exception exception) {
+                String _message = "[> PlayerWelcomeMessage on JoinEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
+                String _fileName = Get.CurrentDate().replace("/", "_");
+                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", _message);
+                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", exception.getMessage());
+                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", "\n\n\n");
+            }
         }
     }
 

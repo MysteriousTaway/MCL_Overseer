@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.Set;
 
 public final class MCL_Overseer extends JavaPlugin {
 
@@ -22,27 +21,30 @@ public final class MCL_Overseer extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Retarded server startup logic that I totally understand:
+//         Retarded server pre-startup logic that I totally understand:
         ServerInstance = getServer();
         SchedulerInstance = ServerInstance.getScheduler();
         PluginInstance = getPlugin(getClass());
-        // Plugin startup logic
-        // OVERSEER LOGO:
+
+//         Plugin startup logic
+//         OVERSEER LOGO:
         LoggerInstance.info("\n                ..,,;;;;;;,,,,\n[O]      .,;'';;,..,;;;,,,,,.''';;,..\n[V]    ,,''                    '';;;;,;''\n[E]   ;'    ,;@@;'  ,@@;, @@, ';;;@@;,;';.\n[R]  ''  ,;@@@@@'  ;@@@@; ''    ;;@@@@@;;;;\n[S]     ;;@@@@@;    '''     .,,;;;@@@@@@@;;;\n[E]    ;;@@@@@@;           , ';;;@@@@@@@@;;;.\n[E]     '';@@@@@,.  ,   .   ',;;;@@@@@@;;;;;;\n[R]       .   '';;;;;;;;;,;;;;@@@@@;;' ,.:;'\n             ''..,,     ''''    '  .,;'\n                 ''''''::''''''''\n");
         PluginManager manager = getServer().getPluginManager();
 
-        // Config stuff:
+//         Config stuff:
         if (!config.exists()) {
-            //Make:
+//            Make:
             LoggerInstance.info("config.yml not found. Created a default config.");
             saveDefaultConfig();
         }
-        // Load config:
+//         Load config:
         LoggerInstance.info("Loading config values:");
         ConfigManager.ReadFromConfig();
-        // Make dirs if not found:
+//         Make dirs if not found:
         FileManager.CheckForFolders();
-        // Listeners:
+//         Make files if not found:
+        FileManager.CheckForFiles();
+//         Listeners:
         try {
             manager.registerEvents(new ChatManager(), this);
             manager.registerEvents(new PlayerManager(), this);
@@ -58,16 +60,16 @@ public final class MCL_Overseer extends JavaPlugin {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
 
-        // Statistics:
+//         Statistics:
         StatisticsManager.CheckForDataFile();
         StatisticsManager.SetConfigFile();
 
-        // Make scheduler:
+//         Make scheduler:
         try {
-            // Analytics AutoSave:
+//             Analytics AutoSave:
             BukkitTask SaveAnalytics = new StatisticsManager().runTask(PluginInstance);
             SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
-            // Interval code calculations:
+//             Interval code calculations:
             BukkitTask TimedStatisticsCalculation = new StatisticsHandler().runTask(PluginInstance);
             SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) TimedStatisticsCalculation, 0, ConfigManager.RunTimedChecksTickInterval);
         } catch (Exception exception) {
@@ -78,11 +80,7 @@ public final class MCL_Overseer extends JavaPlugin {
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
         }
-        //Commands:
-
-
-
-// !    TESTS:
+//        ! TEST thingy:
         if(FeatureTestRun) {
             String fileName = Get.CurrentDate().replace("/", "_");
             String message = "[> FEATURE TEST RUN! <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + "TEST MESSAGE!";
