@@ -66,10 +66,7 @@ public final class MCL_Overseer extends JavaPlugin {
 
 //         Make scheduler:
         try {
-//             Analytics AutoSave:
-            BukkitTask SaveAnalytics = new StatisticsManager().runTask(PluginInstance);
-            SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) SaveAnalytics, 0, ConfigManager.SaveFileIntervalTicks);
-//             Interval code calculations:
+//             Repeating statistics calculations:
             BukkitTask TimedStatisticsCalculation = new StatisticsHandler().runTask(PluginInstance);
             SchedulerInstance.scheduleSyncRepeatingTask(PluginInstance, (Runnable) TimedStatisticsCalculation, 0, ConfigManager.RunTimedChecksTickInterval);
         } catch (Exception exception) {
@@ -92,7 +89,6 @@ public final class MCL_Overseer extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         StatisticsManager.SaveStatistics();
-        Analytics.Run();
         getServer().broadcastMessage(ChatColor.RED + "<[!!!]> " + ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
     }
 }
