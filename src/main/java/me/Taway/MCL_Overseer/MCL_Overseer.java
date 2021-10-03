@@ -51,6 +51,7 @@ public final class MCL_Overseer extends JavaPlugin {
             manager.registerEvents(new BlockManager(), this);
             manager.registerEvents(new EntityManager(), this);
             manager.registerEvents(new StatisticsHandler(), this);
+            manager.registerEvents(new DifficultyHandler(), this);
         } catch (Exception exception) {
             LoggerInstance.severe("Event register exception! " + exception.getMessage());
             String message;

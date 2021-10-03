@@ -31,6 +31,10 @@ public class ConfigManager {
     //Statistics:
     protected static int SaveFileIntervalTicks;
     protected static int RunTimedChecksTickInterval;
+    //Difficulty:
+    protected static int Difficulty_HealthMultiplier;
+    protected static boolean Difficulty_DropArmorOnDeath;
+    protected static int Difficulty_EquipmentChance;
 
     protected static void ReadFromConfig() {
         try {
@@ -54,7 +58,10 @@ public class ConfigManager {
             //Statistics:
             SaveFileIntervalTicks = config.getInt("Statistics.Save-File-Interval-Ticks");
             RunTimedChecksTickInterval = config.getInt("Statistics.Run-Timed-Checks-Tick-Interval");
-            
+            //Difficulty:
+            Difficulty_HealthMultiplier = config.getInt("Difficulty.HealthMultiplier");
+            Difficulty_DropArmorOnDeath = config.getBoolean("Difficulty.DropArmorOnDeath");
+            Difficulty_EquipmentChance = config.getInt("Difficulty.EquipmentChance");
 
             PrintConfig();
         } catch (Exception exception) {

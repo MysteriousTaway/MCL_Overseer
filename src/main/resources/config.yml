@@ -30,3 +30,8 @@ Statistics:
   Save-File-Interval-Ticks: 6000
   # Every 6000 do some timed statistics calculation:
   Run-Timed-Checks-Tick-Interval: 6000
+  # Enemies that spawn in the "PvP" area have more health and wield better weapons:
+Difficulty:
+  HealthMultiplier: 2
+  DropArmorOnDeath: false
+  EquipmentChance: 20
