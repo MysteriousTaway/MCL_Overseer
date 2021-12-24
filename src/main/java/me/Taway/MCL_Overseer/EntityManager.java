@@ -50,17 +50,15 @@ public class EntityManager implements Listener {
                 }
             }
         } catch (Exception exception) {
-            MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log entity spawn event!");
             String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
             if (event == null) {
-                message = "(null) [> onEntitySpawn Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n" + message);
+                message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
             } else {
-                message = "[> onEntitySpawn Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + Objects.requireNonNull(event.getLocation().getWorld()).getName();
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+                message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + Objects.requireNonNull(event.getLocation().getWorld()).getName();
             }
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
         // void
     }
@@ -95,10 +93,10 @@ public class EntityManager implements Listener {
                 }
             }
         } catch (Exception exception) {
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> MinecartSpawnEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > World: " + event.getVehicle().getLocation().getWorld().toString();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to block minecart spawn event! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 }

@@ -24,7 +24,7 @@ public class FileManager {
         }
     }
 
-    protected static String[] readFromFile(String filename) {
+    protected static String[] ReadFromFile(String filename) {
         String file = "";
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -39,11 +39,10 @@ public class FileManager {
             file = sb.toString();
             br.close();
         } catch(Exception exception) {
-            String message = "[> readFromFile <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n");
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to ! ";
+            String method = "FileManager.ReadFromFile";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
 
         if (file.length() > 0 ) {
@@ -76,7 +75,10 @@ public class FileManager {
                 }
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to ! ";
+            String method = "FileManager.CheckForFolders";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
@@ -93,7 +95,14 @@ public class FileManager {
                 }
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to ! ";
+            String method = "FileManager.CheckForFiles";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
+    }
+    protected static void LogException(String message) {
+        String fileName = Get.CurrentDate().replace("/", "_");
+        FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n" + message);
     }
 }

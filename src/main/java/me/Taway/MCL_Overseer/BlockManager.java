@@ -1,9 +1,6 @@
 package me.Taway.MCL_Overseer;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,16 +40,15 @@ public class BlockManager implements Listener {
             // try catch
         } catch (Exception exception) {
             String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
             MCL_Overseer.LoggerInstance.info("<[!!!]> Overseer could not log block place event!");
             if (event == null) {
-                message = "(null) [> onBlockPlace Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n" + message);
+                message = "(null) <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > event was equal to null and therefore no further information could be logged!";
             } else {
-                message = "[> onBlockPlace Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+                message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
             }
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
         //void
     }

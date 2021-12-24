@@ -32,6 +32,5 @@ Statistics:
   Run-Timed-Checks-Tick-Interval: 6000
   # Enemies that spawn in the "PvP" area have more health and wield better weapons:
 Difficulty:
-  HealthMultiplier: 2
-  DropArmorOnDeath: false
+  DropArmorOnDeathChance: 0
   EquipmentChance: 20

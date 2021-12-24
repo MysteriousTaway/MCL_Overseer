@@ -66,26 +66,33 @@ public class StatisticsManager extends BukkitRunnable {
     }
 
     protected static void SetConfigFile() {
-        File DataFile = new File(plugin.getDataFolder(), "/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml");
-        if (DataFile.exists()) {
-            path = "plugins/MCL_Overseer/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml";
-            config = YamlConfiguration.loadConfiguration(DataFile);
+        try {
+            File DataFile = new File(plugin.getDataFolder(), "/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml");
+            if (DataFile.exists()) {
+                path = "plugins/MCL_Overseer/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml";
+                config = YamlConfiguration.loadConfiguration(DataFile);
 
-            LoadStatistics();
+                LoadStatistics();
 
-        } else {
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> SetConfigFile Exception (Statistics) <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            } else {
+                String fileName = Get.CurrentDate().replace("/", "_");
+                String message = "[> SetConfigFile Exception (Statistics) <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime();
+                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
 
-            CheckForDataFile();
+                CheckForDataFile();
+            }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to set config file! ";
+            String method = "StatisticsManager.SetConfigFile";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     protected static void CheckForDataFile() {
-        File file = new File("plugins/MCL_Overseer/_Statistics/", Get.CurrentDate().replace("/", "_") + ".yml");
-        if (!file.exists()) {
-            try {
+        try {
+            File file = new File("plugins/MCL_Overseer/_Statistics/", Get.CurrentDate().replace("/", "_") + ".yml");
+            if (!file.exists()) {
                 file.createNewFile();
                 FileManager.writeToFile("/_Statistics/" + Get.CurrentDate().replace("/", "_") + ".yml",
                         "Connection:" +
@@ -130,14 +137,14 @@ public class StatisticsManager extends BukkitRunnable {
                                 "\n  X-minus_Z-plus: 0" +
                                 "\n  X-plus_Z-minus: 0" +
                                 "\n  X-minus_Z-minus: 0"
-
                 );
                 LoggerInstance.warning("Created new statistics file!");
-            } catch (IOException exception) {
-                String fileName = Get.CurrentDate().replace("/", "_");
-                String message = "[> CheckForDataFile Exception (Statistics)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
             }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to check for data file! ";
+            String method = "StatisticsHandler.CheckForDataFile";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
@@ -190,12 +197,10 @@ public class StatisticsManager extends BukkitRunnable {
 
             LoggerInstance.info("Saved statistics!");
         } catch (IOException exception) {
-            LoggerInstance.severe("Exception while saving statistics config! " + exception.getMessage());
-            String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> SaveStatistics <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Exception Message: \n" + exception.getMessage();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to save statistics! ";
+            String method = "StatisticsManager.SaveStatistics";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
 
     }
@@ -248,11 +253,10 @@ public class StatisticsManager extends BukkitRunnable {
             // Print to console:
             PrintStatistics();
         } catch (Exception exception) {
-            String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> Statistics <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to load statistics! ";
+            String method = "StatisticsManager.LoadStatistics";
+            message = "[" + method + "]" + message;
+            FileManager.LogException(message);
         }
     }
 
@@ -271,10 +275,10 @@ public class StatisticsManager extends BukkitRunnable {
         try {
             SaveStatistics();
         } catch (Exception exception) {
-            LoggerInstance.severe("BukkitRunnable ERROR while saving statistics config! " + exception.getMessage());
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> StatisticsManager (run)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to run statistics! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 }

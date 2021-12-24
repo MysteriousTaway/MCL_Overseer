@@ -32,8 +32,7 @@ public class ConfigManager {
     protected static int SaveFileIntervalTicks;
     protected static int RunTimedChecksTickInterval;
     //Difficulty:
-    protected static int Difficulty_HealthMultiplier;
-    protected static boolean Difficulty_DropArmorOnDeath;
+    protected static int Difficulty_DropArmorOnDeathChance;
     protected static int Difficulty_EquipmentChance;
 
     protected static void ReadFromConfig() {
@@ -58,28 +57,33 @@ public class ConfigManager {
             //Statistics:
             SaveFileIntervalTicks = config.getInt("Statistics.Save-File-Interval-Ticks");
             RunTimedChecksTickInterval = config.getInt("Statistics.Run-Timed-Checks-Tick-Interval");
-            //Difficulty:
-            Difficulty_HealthMultiplier = config.getInt("Difficulty.HealthMultiplier");
-            Difficulty_DropArmorOnDeath = config.getBoolean("Difficulty.DropArmorOnDeath");
+            //Difficulty:;
+            Difficulty_DropArmorOnDeathChance = config.getInt("Difficulty.DropArmorOnDeathChance");
             Difficulty_EquipmentChance = config.getInt("Difficulty.EquipmentChance");
 
             PrintConfig();
         } catch (Exception exception) {
-            String message;
-            String fileName = Get.CurrentDate().replace("/", "_");
-            message = "[> ReadFromConfig Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >";
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while loading config!";
+            String method = "ConfigManager.ReadFromConfig";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     protected static void PrintConfig() {
-        LoggerInstance.warning("<[CONFIG]>");
-        Set<String> KeySet = config.getKeys(true);
-        for (String key : KeySet) {
-            if(key.contains(".")) {
-                LoggerInstance.info(key + "  =>  " + config.get(key));
+        try {
+            LoggerInstance.warning("<[CONFIG]>");
+            Set<String> KeySet = config.getKeys(true);
+            for (String key : KeySet) {
+                if (key.contains(".")) {
+                    LoggerInstance.info(key + "  =>  " + config.get(key));
+                }
             }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to print config to console (HOW!? WHY?! HOW CAN THIS FUCKING FAIL?!)! ";
+            String method = "ConfigManager.PrintConfig";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 }

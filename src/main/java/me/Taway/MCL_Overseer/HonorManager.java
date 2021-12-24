@@ -21,12 +21,12 @@ public class HonorManager {
     static FileConfiguration config;
 
     protected static void ChangeHonorValueOfPlayer(Player player, int value) {
-        if (ConfigManager.AllowHonor) {
-            // Load config to
-            SetConfigFile(player.getUniqueId());
-            //get honor
-            int honor = config.getInt(player.getUniqueId() + ".Honor");
-            try {
+        try {
+            if (ConfigManager.AllowHonor) {
+                // Load config to
+                SetConfigFile(player.getUniqueId());
+                //get honor
+                int honor = config.getInt(player.getUniqueId() + ".Honor");
                 if (player != null && value != 0) {
                     // Add value to honor. Even if value is negative this code will work.
                     honor += value;
@@ -48,12 +48,12 @@ public class HonorManager {
                 } else {
                     getLogger().warning("HonorManager.ChangeHonorValueOfPlayer value is equal to zero or player is equal to null.");
                 }
-            } catch (Exception exception) {
-                String fileName = Get.CurrentDate().replace("/", "_");
-                String message = "[> ChangeHonorOfPlayer Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Player:" + player.getDisplayName();
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
             }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to change honor of player! ";
+            String method = "HonorManager.ChangeHonorValueOfPlayer";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
@@ -63,36 +63,40 @@ public class HonorManager {
             path = "plugins/MCL_Overseer/PlayerData/" + UUID + ".yml";
             config = YamlConfiguration.loadConfiguration(DataFile);
         } else {
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> SetConfigFile Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " UUID:" + UUID;
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to SetConfigFile! ";
+            String method = "HonorManager.SetConfigFile";
+            message = "[" + method + "]" + message;
+            FileManager.LogException(message);
         }
     }
 
     protected static void SetIP(Player player) {
+        try {
         SetConfigFile(player.getUniqueId());
         config.set(player.getUniqueId() + ".IP", player.getAddress().getHostName());
-        try {
             config.save(path);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to set IP! ";
+            String method = "HonorManager.SetIP";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     protected static void CheckForDataFile(Player player) {
-        UUID UUID = player.getUniqueId();
-        File file = new File("plugins/MCL_Overseer/PlayerData/", UUID + ".yml");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
+        try {
+            UUID UUID = player.getUniqueId();
+            File file = new File("plugins/MCL_Overseer/PlayerData/", UUID + ".yml");
+            if (!file.exists()) {
                 FileManager.writeToFile("PlayerData/" + UUID + ".yml", "# File created on: " + Get.CurrentDate() + "\n" + UUID + ":\n   Username: " + player.getDisplayName() + "\n   Honor: 100" + "\n   IP: " + player.getAddress().getHostName());
-            } catch (IOException exception) {
-                String fileName = Get.CurrentDate().replace("/", "_");
-                String message = "[> CheckForDataFile Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
-                FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            } else {
+                SetIP(player);
             }
-        } else {
-            SetIP(player);
+        }catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to check for file! ";
+            String method = "HonorManager.CheckForDataFile";
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 }

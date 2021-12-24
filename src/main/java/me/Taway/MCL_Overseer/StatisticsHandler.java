@@ -30,7 +30,7 @@ public class StatisticsHandler extends BukkitRunnable implements Listener {
                 int X = player.getLocation().getBlockX();
                 int Z = player.getLocation().getBlockZ();
                 // Get dimension:
-                switch(World) {
+                switch(World.toLowerCase()) {
                     case("world") -> {
                         if(X > 0 && Z > 0) {
                             StatisticsManager.Overworld_X_plus_Z_plus++;
@@ -80,9 +80,10 @@ public class StatisticsHandler extends BukkitRunnable implements Listener {
             }
         } catch (Exception exception) {
             LoggerInstance.severe("BukkitRunnable ERROR while running timed statistics operation ! " + exception.getMessage());
-            String fileName = Get.CurrentDate().replace("/", "_");
-            String message = "[> StatisticsHandler (run)<] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " Exception message: " + exception.getMessage();
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n" + message);
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to run timed statistics operation! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 

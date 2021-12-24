@@ -22,16 +22,17 @@ public class PlayerManager implements Listener {
     protected void onPlayerDamage(EntityDamageByEntityEvent event) {
         try {
             if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
-                Player player = ((Player) event).getPlayer();
-                Player attacker = (Player) event.getDamager();
-                double distance = player.getLocation().distance(attacker.getLocation());
+//                Player player = ((Player) event).getPlayer();
+//                Player attacker = (Player) event.getDamager();
+                String player = ((Player) event.getEntity()).getPlayer().getDisplayName();
+                String attacker = ((Player) event.getDamager()).getPlayer().getDisplayName();
+                double distance = event.getEntity().getLocation().distance(event.getDamager().getLocation());
                 if (distance < 3.6) {
                     assert player != null;
-                    Location location = player.getLocation();
+                    Location location = event.getDamager().getLocation();
                     // Location of attacked player has to be more than 8000 on x or z axis to be considered valid.
                     if (!Get.isInPvE(location)) {
-                        attacker.sendMessage(ChatColor.GOLD + "<[INFO]> " + ChatColor.WHITE + "You dealt " + ChatColor.RED + event.getDamage() + " damage" + ChatColor.WHITE + " to " + player.getDisplayName());
-                        String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker.getDisplayName() + " VICTIM: " + player.getDisplayName() + " DAMAGE: " + event.getDamage() + " ATT_HEALTH: " + attacker.getHealth() + " VIC_HEALTH " + player.getHealth();
+                        String message = "[PvP] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " >" + " ATTACKER: " + attacker + " VICTIM: " + player + " DAMAGE: " + event.getDamage();
                         String fileName = Get.CurrentDate().replace("/", "_");
                         FileManager.writeToFile("CombatLog/" + fileName + ".txt", message);
                     } else {
@@ -39,16 +40,14 @@ public class PlayerManager implements Listener {
                     }
                 } else {
                     event.setCancelled(true);
-                    attacker.sendMessage(ChatColor.RED + "<[!!!]> The use of REACH hack is prohibited on this server.");
+                    event.getDamager().sendMessage(ChatColor.RED + "<[!!!]> The use of REACH hack is prohibited on this server.");
                 }
             }
         } catch (Exception exception) {
-            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player damage!");
-            String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n");
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to validate player damage event! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
@@ -63,67 +62,72 @@ public class PlayerManager implements Listener {
             String fileName = Get.CurrentDate().replace("/", "_");
             FileManager.writeToFile("DeathLog/" + fileName + ".txt", message);
         } catch (Exception exception) {
-            MCL_Overseer.LoggerInstance.info(ChatColor.DARK_RED + "<[!!!]> Overseer could not log player death!");
-            String message = "[> onPlayerDamage Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", message);
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", exception.getMessage());
-            FileManager.writeToFile("ExceptionLog/" + fileName + ".txt", "\n\n\n");
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to log player death! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     @EventHandler
     protected void endPortalListener(PlayerTeleportEvent event) {
-        if (!ConfigManager.Allow_End) {
-            if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
-                // Get data:
-                Player player = event.getPlayer();
-                Location bedLocation = player.getBedSpawnLocation();
-                assert bedLocation != null;
-                // Punishment
-                getServer().broadcastMessage(ChatColor.RED + "<[OVERSEER]> Player: " + player.getDisplayName() + " broke server rules by using end portal and was penalised.");
-                player.getInventory().clear();
-                player.setExp(0);
-                if (player.getBedSpawnLocation() != null) {
-                    player.teleport(bedLocation);
-                } else {
-                    player.setHealth(0);
+        try {
+            if (!ConfigManager.Allow_End) {
+                if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL && !event.getPlayer().isOp()) {
+                    // Get data:
+                    Player player = event.getPlayer();
+                    Location bedLocation = player.getBedSpawnLocation();
+                    assert bedLocation != null;
+                    // Punishment
+                    getServer().broadcastMessage(ChatColor.RED + "<[OVERSEER]> Player: " + player.getDisplayName() + " broke server rules by using end portal and was penalised.");
+                    player.getInventory().clear();
+                    player.setExp(0);
+                    if (player.getBedSpawnLocation() != null) {
+                        player.teleport(bedLocation);
+                    } else {
+                        player.setHealth(0);
+                    }
+                    Location location = event.getPlayer().getLocation();
+                    World world = location.getWorld();
+                    assert world != null;
+                    String message = "[END PORTAL] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
+                    String fileName = Get.CurrentDate().replace("/", "_");
+                    FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
+                    // Punish:
+                    //  Part 1:
+                    HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EndEntryPenalty);
+                    //  Part 2:
+                    player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
                 }
-                Location location = event.getPlayer().getLocation();
-                World world = location.getWorld();
-                assert world != null;
-                String message = "[END PORTAL] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + location.getBlockX() + " Y=" + location.getBlockY() + " Z=" + location.getBlockZ();
-                String fileName = Get.CurrentDate().replace("/", "_");
-                FileManager.writeToFile("ForbiddenActivityLog/" + fileName + ".txt", message);
-                // Punish:
-                //  Part 1:
-                HonorManager.ChangeHonorValueOfPlayer(player, ConfigManager.EndEntryPenalty);
-                //  Part 2:
-                player.kickPlayer("You were penalised for breaking server rules. Your inventory and experience was reset.\nThis action was performed automatically by " + ChatColor.RED + "<[OVERSEER]>");
             }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to validate player teleport event! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     @EventHandler
     protected void onPlayerJoinEvent(PlayerJoinEvent event) {
-        if (event != null) {
-            //Create log file:
-            HonorManager.CheckForDataFile(event.getPlayer());
-            //Log login:
-            Player player = event.getPlayer();
-            Location location = event.getPlayer().getLocation();
-            World world = location.getWorld();
-            int x = location.getBlockX();
-            int y = location.getBlockY();
-            int z = location.getBlockZ();
-            String message = "[> Join <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
+        try {
+            if (event != null) {
+                //Create log file:
+                HonorManager.CheckForDataFile(event.getPlayer());
+                //Log login:
+                Player player = event.getPlayer();
+                Location location = event.getPlayer().getLocation();
+                World world = location.getWorld();
+                int x = location.getBlockX();
+                int y = location.getBlockY();
+                int z = location.getBlockZ();
+                String message = "[> Join <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
+                String fileName = Get.CurrentDate().replace("/", "_");
+                FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
 
 //            Send player welcome message from the text file:
-            try {
                 File WelcomeFile = new File("plugins/MCL_Overseer/Files/WelcomeMessage.txt");
-                String[] text = FileManager.readFromFile(WelcomeFile.toString());
+                String[] text = FileManager.ReadFromFile(WelcomeFile.toString());
                 if (text != null) {
                     player.sendMessage(ChatColor.GOLD + "<AUTOMATED MESSAGE>\n");
                     for (String TextLine : text) {
@@ -131,28 +135,34 @@ public class PlayerManager implements Listener {
                     }
                     player.sendMessage(ChatColor.GOLD + "</AUTOMATED MESSAGE>");
                 }
-            } catch (Exception exception) {
-                String _message = "[> PlayerWelcomeMessage on JoinEvent Exception <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + Objects.requireNonNull(((Player) event).getPlayer()).getDisplayName();
-                String _fileName = Get.CurrentDate().replace("/", "_");
-                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", _message);
-                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", exception.getMessage());
-                FileManager.writeToFile("ExceptionLog/" + _fileName + ".txt", "\n\n\n");
             }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to log player login! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 
     @EventHandler
     protected void onPlayerDisconnectEvent(PlayerQuitEvent event) {
-        if (event != null) {
-            Player player = event.getPlayer();
-            Location location = event.getPlayer().getLocation();
-            World world = location.getWorld();
-            int x = location.getBlockX();
-            int y = location.getBlockY();
-            int z = location.getBlockZ();
-            String message = "[> Quit <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
-            String fileName = Get.CurrentDate().replace("/", "_");
-            FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
+        try {
+            if (event != null) {
+                Player player = event.getPlayer();
+                Location location = event.getPlayer().getLocation();
+                World world = location.getWorld();
+                int x = location.getBlockX();
+                int y = location.getBlockY();
+                int z = location.getBlockZ();
+                String message = "[> Quit <] <DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > PLAYER: " + player.getDisplayName() + " WORLD: " + world.getName() + " LOCATION: X=" + x + " Y=" + y + " Z=" + z + " IP: " + player.getAddress().getHostName();
+                String fileName = Get.CurrentDate().replace("/", "_");
+                FileManager.writeToFile("ActivityLog/" + fileName + ".txt", message);
+            }
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to log player disconnect event! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
         }
     }
 }

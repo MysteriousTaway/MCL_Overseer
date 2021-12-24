@@ -2,13 +2,16 @@ package me.Taway.MCL_Overseer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-
+/*
+ MCL_Overseer.SchedulerInstance.runTaskAsynchronously(MCL_Overseer.PluginInstance, new Runnable() {});
+*/
 public final class MCL_Overseer extends JavaPlugin {
 
     protected File config = new File(getDataFolder(), "config.yml");
@@ -51,7 +54,7 @@ public final class MCL_Overseer extends JavaPlugin {
             manager.registerEvents(new BlockManager(), this);
             manager.registerEvents(new EntityManager(), this);
             manager.registerEvents(new StatisticsHandler(), this);
-            manager.registerEvents(new DifficultyHandler(), this);
+//            manager.registerEvents(new DifficultyHandler(), this);
         } catch (Exception exception) {
             LoggerInstance.severe("Event register exception! " + exception.getMessage());
             String message;
@@ -89,7 +92,14 @@ public final class MCL_Overseer extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        StatisticsManager.SaveStatistics();
-        getServer().broadcastMessage(ChatColor.RED + "<[!!!]> " + ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
+        try {
+            StatisticsManager.SaveStatistics();
+            getServer().broadcastMessage(ChatColor.RED + "<[!!!]> " + ChatColor.WHITE + "Overseer plugin has been " + ChatColor.RED + "DEACTIVATED.");
+        } catch (Exception exception) {
+            String message = "<DATE: " + Get.CurrentDate() + " TIME: " + Get.CurrentTime() + " > Error occurred while attempting to ! ";
+            String method = this.getClass().getName() + "." + this.getClass().getEnclosingMethod().getName();
+            message = "[" + method + "]" + message + "\n" + message + exception.getMessage();
+            FileManager.LogException(message);
+        }
     }
 }
